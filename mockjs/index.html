@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="John Doe">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="通过mockjs搭建本地数据模拟服务"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="Hexo"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>通过mockjs搭建本地数据模拟服务 - Hexo</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            通过mockjs搭建本地数据模拟服务
+            
+          </h1>
+          <p class="posted-on">
+          2018-07-17
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <blockquote>
+<p>mock数据是前端不变的需求。那怎么才能轻松的本地模拟后端数据。本文通过在npm start的起一个mock服务，前端可通过http请求的方式，获取模拟的json文件的内容。最关键的是，mock可以模拟和后端一样的接口路径，最终只需要改域名地址，就可以实现前端模拟接口和后端接口的无缝切换。本文以vue为例子，讲解前后端如何交互。</p>
+</blockquote>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>利用express起一个服务（端口3618），通过<code>glob</code>库获取<code>json文件</code>的内容，添加到<code>apiContArr</code>数组中，同时用<code>fs.watchFile</code>实现文件的监听，最后通过express里的<code>res.json</code>函数将json内容以json格式传输给前台。</p>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><ul>
+<li><p>前端代码</p>
+<blockquote>
+<p>通过<code>axios</code>这个库，实现restful风格的请求</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fetch = <span class="function">(<span class="params">url, params, method</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> ajx;</span><br><span class="line">    <span class="keyword">if</span> (method === <span class="string">'get'</span>) &#123;</span><br><span class="line">      ajx = axios.get(url, params);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (method === <span class="string">'delete'</span>) &#123;</span><br><span class="line">      ajx = axios.delete(url, params);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (method === <span class="string">'put'</span>) &#123;</span><br><span class="line">      ajx = axios.put(url, params);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      ajx = axios.post(url, params);</span><br><span class="line">    &#125;</span><br><span class="line">    ajx.then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (res.code === <span class="number">1</span>) &#123;</span><br><span class="line">        reject(res);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        resolve(res);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;).catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (err) <span class="keyword">return</span> err;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> development = <span class="string">'http://localhost:3618'</span>;</span><br><span class="line"><span class="keyword">const</span> API = <span class="function">(<span class="params">url, method</span>) =&gt;</span> params =&gt; fetch(development + url, params, method);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用getDemoAPI即可请求数据</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  getDemoAPI: API(<span class="string">'/demo'</span>, <span class="string">'post'</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>后端代码</p>
+<blockquote>
+<p>json内容读取和实时监听文件变化</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="built_in">require</span>(<span class="string">'express'</span>)();</span><br><span class="line"><span class="keyword">const</span> mock = <span class="built_in">require</span>(<span class="string">'mockjs'</span>);</span><br><span class="line"><span class="keyword">const</span> glob = <span class="built_in">require</span>(<span class="string">'glob'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 存放所有api内容</span></span><br><span class="line"><span class="keyword">let</span> apiContArr = []; </span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> apiPath = path.join(__dirname, <span class="string">'./*.json'</span>);</span><br><span class="line">  <span class="keyword">let</span> apiPathArr = <span class="keyword">await</span> getPath(apiPath);</span><br><span class="line">  <span class="keyword">await</span> getApis();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 监听JSON文件的变化</span></span><br><span class="line">  apiPathArr.forEach(<span class="keyword">async</span> val =&gt; &#123;</span><br><span class="line">    <span class="keyword">await</span> fs.watchFile(val, curr =&gt; &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'API is updated.'</span>, curr.mtime);</span><br><span class="line">      getApis();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 将json里的内容添加到apiContArr当中</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">getApis</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    apiPathArr.forEach(<span class="keyword">async</span> val =&gt; &#123;</span><br><span class="line">      <span class="keyword">await</span> fs.readFile(val, <span class="string">'utf-8'</span>, (err, cont) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) <span class="keyword">throw</span> err;</span><br><span class="line">        <span class="keyword">if</span> (!cont) <span class="keyword">throw</span> <span class="string">'content must exsit.'</span>;</span><br><span class="line"></span><br><span class="line">        apiContArr.push(<span class="built_in">JSON</span>.parse(cont));</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">init();</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>通过请求的url发送相关报文<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> data;</span><br><span class="line">  <span class="keyword">let</span> delay = <span class="number">0</span>;</span><br><span class="line">  apiContArr.forEach(<span class="function"><span class="params">val</span> =&gt;</span> &#123;</span><br><span class="line">    val.forEach(<span class="function"><span class="params">reqData</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (reqData.regexp) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">new</span> <span class="built_in">RegExp</span>(reqData.url).test(req.originalUrl)) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (req.originalUrl.indexOf(reqData.url) !== <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">let</span> apiRes = reqData.res;</span><br><span class="line">      data = reqData.mock ? mock.mock(apiRes) : apiRes;</span><br><span class="line">      delay = reqData.delay || <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  res.set(<span class="string">'Access-Control-Allow-Origin'</span>, <span class="string">'*'</span>);</span><br><span class="line">  res.set(<span class="string">'Access-Control-Allow-Methods'</span>, <span class="string">'POST, GET, PUT, DELETE, OPTIONS'</span>);</span><br><span class="line">  res.set(<span class="string">'Access-Control-Allow-Headers'</span>, <span class="string">'Origin, X-Requested-With, Content-Type, Accept, Authorization'</span>);</span><br><span class="line">  data !== <span class="literal">undefined</span> ? setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> res.json(data), delay) : res.sendStatus(<span class="number">404</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(<span class="string">'3618'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.info(<span class="string">'Mock server is listening at 3618'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>辅助函数<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取某一目录下所有文件名</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getPath</span>(<span class="params">path, options = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    glob(path, options, (er, files) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (er) &#123;</span><br><span class="line">        reject(er);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        resolve(files);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p>在package.json中添加mock服务。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"vue-common-template"</span>,</span><br><span class="line">  <span class="string">"version"</span>: <span class="string">"1.0.0"</span>,</span><br><span class="line">  <span class="string">"description"</span>: <span class="string">"common template"</span>,</span><br><span class="line">  <span class="string">"author"</span>: <span class="string">"carroll"</span>,</span><br><span class="line">  <span class="string">"scripts"</span>: &#123;</span><br><span class="line">    <span class="string">"start"</span>: <span class="string">"npm run mock | npm run dev"</span>,</span><br><span class="line">    <span class="string">"mock"</span>: <span class="string">"node mock/app.js"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="呈现效果"><a href="#呈现效果" class="headerlink" title="呈现效果"></a>呈现效果</h4><h4 id="地址"><a href="#地址" class="headerlink" title="地址"></a>地址</h4><p>我通过vue-cli搭建了一个vue开箱即用的模板，其中实现了mock功能，<a href="">https://github.com/carrollcai/vue-template</a>。</p>
+<p>======<br>当然这个mock还有很多不完善的地方，但是本地调试基本够用。如果错误请指出，谢谢。</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+        <div class="nav-previous">
+          <a href="/time-control/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+        </div>
+      
+      
+        <div class="nav-next">
+          <a href="/json-compare/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>Hexo &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>

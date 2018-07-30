@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="John Doe">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="G2（Antv）在vue中的实践"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="Hexo"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>G2（Antv）在vue中的实践 - Hexo</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            G2（Antv）在vue中的实践
+            
+          </h1>
+          <p class="posted-on">
+          2018-07-17
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>团队使用G2的原因，主要是设计师认可阿里的审美，UI视觉稿输出的就是G2的图表。</p>
+<h4 id="在vue中使用G2，Echarts等图表原理"><a href="#在vue中使用G2，Echarts等图表原理" class="headerlink" title="在vue中使用G2，Echarts等图表原理"></a>在vue中使用G2，Echarts等图表原理</h4><p>为不同类型的图表建不同的文件，Line，Map，Pie等。在mounted（dom结构已经生成的时候），调用图表的渲染函数，对外暴露一个data，并且watch一个data，当data改变的时候，重新调用图表的渲染函数。</p>
+<p>Line.vue示例<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">:style</span>=<span class="string">"&#123; width: `$&#123;width&#125;px`, height:`$&#123;height&#125;px` &#125;"</span> <span class="attr">:id</span>=<span class="string">"id"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> G2 <span class="keyword">from</span> <span class="string">'@antv/G2'</span>;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="undefined">  data() &#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="javascript">      chart: <span class="literal">null</span></span></span><br><span class="line"><span class="undefined">    &#125;;</span></span><br><span class="line"><span class="undefined">  &#125;,</span></span><br><span class="line"><span class="undefined">  props: &#123;</span></span><br><span class="line"><span class="undefined">    charData: &#123;</span></span><br><span class="line"><span class="javascript">      type: <span class="built_in">Array</span>,</span></span><br><span class="line"><span class="javascript">      <span class="keyword">default</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> [];</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    width: &#123;</span></span><br><span class="line"><span class="javascript">      type: <span class="built_in">Number</span></span></span><br><span class="line"><span class="javascript">      <span class="keyword">default</span>: <span class="number">500</span></span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    height: &#123;</span></span><br><span class="line"><span class="javascript">      type: <span class="built_in">Number</span>,</span></span><br><span class="line"><span class="javascript">      <span class="keyword">default</span>: <span class="number">500</span></span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="javascript">    id: <span class="built_in">String</span>,</span></span><br><span class="line"><span class="undefined">  &#125;,</span></span><br><span class="line"><span class="undefined">  mounted() &#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">this</span>.drawChart(<span class="keyword">this</span>.charData);</span></span><br><span class="line"><span class="undefined">  &#125;,</span></span><br><span class="line"><span class="undefined">  watch: &#123;</span></span><br><span class="line"><span class="undefined">    charData(val, oldVal) &#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.drawChart(val);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  &#125;,</span></span><br><span class="line"><span class="undefined">  methods: &#123;</span></span><br><span class="line"><span class="undefined">    drawChart(data) &#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">const</span> &#123; height, id &#125; = <span class="keyword">this</span>;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.chart &amp;&amp; <span class="keyword">this</span>.chart.destroy();</span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.chart = <span class="keyword">new</span> G2.Chart(&#123;</span></span><br><span class="line"><span class="undefined">        id: id,</span></span><br><span class="line"><span class="javascript">        forceFit: <span class="literal">true</span>,</span></span><br><span class="line"><span class="undefined">        height: height,</span></span><br><span class="line"><span class="undefined">        padding: [40, 80]</span></span><br><span class="line"><span class="undefined">      &#125;);</span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.chart.source(data);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.chart.line().position(<span class="string">'periodId*value'</span>).size(<span class="number">1</span>).shape(<span class="string">'smooth'</span>);</span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.chart.point().position(<span class="string">'periodId*value'</span>).shape(<span class="string">'circle'</span>);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.chart.render();</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">&#125;;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>当然你想对图表数据的显示进行操作，就需要单独引用DataSet函数，这样减少了不必要的包的体积。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> DataSet <span class="keyword">from</span> <span class="string">'@antv/data-set'</span>;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">const</span> ds = <span class="keyword">new</span> DataSet();</span></span><br><span class="line"><span class="javascript"><span class="keyword">const</span> dv = ds.createView().source(data);</span></span><br><span class="line"><span class="undefined">dv.transform(&#123;</span></span><br><span class="line"><span class="javascript">  type: <span class="string">'fold'</span>,</span></span><br><span class="line"><span class="undefined">  fields: fields,</span></span><br><span class="line"><span class="javascript">  key: <span class="string">'which'</span>,</span></span><br><span class="line"><span class="javascript">  value: <span class="string">'value'</span></span></span><br><span class="line"><span class="undefined">&#125;);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">this</span>.chart.source(dv, &#123;</span></span><br><span class="line"><span class="undefined">  periodId: &#123;</span></span><br><span class="line"><span class="undefined">    range: [0, 1]</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">&#125;);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="对比Echarts"><a href="#对比Echarts" class="headerlink" title="对比Echarts"></a>对比Echarts</h4><ul>
+<li>因为之前一直都在用Echarts，期间也用过charts，highcharts等，这些基本都是一个模式的，通过树状结构的配置渲染图表。有时候图表option的配置可能很长，所以我们当时做大屏展示的时候，将option抽出成一个单独的js文件，减少.vue文件行数。也可能是当时项目比较大，分工比较细，每一个图表基本都要新建一个option，代码比较冗余。但好处是，可以抽象出一个Chart.vue这样的公共组件，供所有图表使用，调只需提供option。</li>
+<li>而在使用G2的使用，我就无法抽出这样一个公共的组件，虽然G2支持树状结构的配置，但是通过函数方式调用，结构更加直观，扁平，更重要的是，你可以通过标签声明式的方式组成图表，官方就有推荐vue-viser。Antv也支持响应式，通过配置forceFit: true就可以实现宽度的自适应。而echarts需要通过监听window.resize，或者watch高度的变化，调用this.chart.resize()重新resize视图。</li>
+</ul>
+<p>Chart.vue(Echarts)<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">:style</span>=<span class="string">"&#123;height:height,width:width&#125;"</span> <span class="attr">ref</span>=<span class="string">"myEchart"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">  <span class="keyword">import</span> &#123;mapState&#125; <span class="keyword">from</span> <span class="string">'vuex'</span></span></span><br><span class="line"><span class="javascript">  <span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="undefined">    props: &#123;</span></span><br><span class="line"><span class="undefined">      width: &#123;</span></span><br><span class="line"><span class="javascript">        type: <span class="built_in">String</span>,</span></span><br><span class="line"><span class="undefined">      &#125;,</span></span><br><span class="line"><span class="undefined">      height: &#123;</span></span><br><span class="line"><span class="javascript">        type: <span class="built_in">String</span>,</span></span><br><span class="line"><span class="undefined">      &#125;,</span></span><br><span class="line"><span class="undefined">      setOption: &#123;</span></span><br><span class="line"><span class="javascript">        type: <span class="built_in">Object</span></span></span><br><span class="line"><span class="undefined">      &#125;,</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    data () &#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="javascript">        chart: <span class="literal">null</span></span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    mounted () &#123;</span></span><br><span class="line"><span class="javascript">      setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">this</span>.initChart()</span></span><br><span class="line"><span class="undefined">      &#125;, 0)</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    beforeDestroy () &#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.chart = <span class="literal">null</span></span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    methods: &#123;</span></span><br><span class="line"><span class="undefined">      initChart () &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">this</span>.chart = <span class="built_in">window</span>.echarts.init(<span class="keyword">this</span>.$refs.myEchart)</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 把配置和数据放这里</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span> (!<span class="keyword">this</span>.setOption) &#123;</span></span><br><span class="line"><span class="javascript">          <span class="keyword">this</span>.chart.setOption(<span class="keyword">this</span>.setOption)</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">      &#125;,</span></span><br><span class="line"><span class="undefined">      changeSetOption () &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span> (<span class="keyword">this</span>.setOption) &#123;</span></span><br><span class="line"><span class="javascript">          <span class="keyword">this</span>.chart.setOption(<span class="keyword">this</span>.setOption, <span class="literal">true</span>)</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    watch: &#123;</span></span><br><span class="line"><span class="javascript">      <span class="string">'setOption'</span>: <span class="string">'changeSetOption'</span></span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>vue-viser示例<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">v-chart</span> <span class="attr">:forceFit</span>=<span class="string">"true"</span> <span class="attr">:height</span>=<span class="string">"height"</span> <span class="attr">:data</span>=<span class="string">"data"</span> <span class="attr">:scale</span>=<span class="string">"scale"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">v-tooltip</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">v-axis</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">v-line</span> <span class="attr">position</span>=<span class="string">"year*value"</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">v-point</span> <span class="attr">position</span>=<span class="string">"year*value"</span> <span class="attr">shape</span>=<span class="string">"circle"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">v-chart</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">const</span> data = [</span></span><br><span class="line"><span class="javascript">  &#123; <span class="attr">year</span>: <span class="string">'1991'</span>, <span class="attr">value</span>: <span class="number">3</span> &#125;,</span></span><br><span class="line"><span class="javascript">  &#123; <span class="attr">year</span>: <span class="string">'1992'</span>, <span class="attr">value</span>: <span class="number">4</span> &#125;,</span></span><br><span class="line"><span class="undefined">];</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">const</span> scale = [&#123;</span></span><br><span class="line"><span class="javascript">  dataKey: <span class="string">'value'</span>,</span></span><br><span class="line"><span class="undefined">  min: 0,</span></span><br><span class="line"><span class="undefined">&#125;,&#123;</span></span><br><span class="line"><span class="javascript">  dataKey: <span class="string">'year'</span>,</span></span><br><span class="line"><span class="undefined">  min: 0,</span></span><br><span class="line"><span class="undefined">  max: 1,</span></span><br><span class="line"><span class="undefined">&#125;];</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="undefined">  data() &#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="undefined">      data,</span></span><br><span class="line"><span class="undefined">      scale,</span></span><br><span class="line"><span class="undefined">      height: 400,</span></span><br><span class="line"><span class="undefined">    &#125;;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">&#125;;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>个人感觉Antv的学习曲线高一点，而且Antv还年轻，缺少沉淀，网上没有多少除官方以为的资料，而且你经常无法从官方获取你想要的解决的问题。echarts有更深的沉淀，网上资料齐全。性能方面没有做过对比，看好Antv的发展，默默在github上点了赞。</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+        <div class="nav-previous">
+          <a href="/json-compare/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+        </div>
+      
+      
+        <div class="nav-next">
+          <a href="/collapse-tags/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>Hexo &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>

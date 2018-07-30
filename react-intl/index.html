@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="John Doe">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="基于react-intl实现手动国际化切换"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="Hexo"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>基于react-intl实现手动国际化切换 - Hexo</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            基于react-intl实现手动国际化切换
+            
+          </h1>
+          <p class="posted-on">
+          2018-07-15
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>国际化是一个很常见的需求，之前没有这方面的相关经验，所以决定练一下手。正好最近在写一个react骨架（新项目可直接移植的骨架），上网查了一下，常用的解决方案是yahoo的<code>react-intl</code>库，大致效果如下。</p>
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><ul>
+<li><p>首先解决静态国际化，即根据浏览器的语言，自动加载对应的语言模板。这里只需判断<code>navigator.language</code>类型即可，然后通过react-intl提供了<code>IntlProvider</code>组件，加载组件属性的locale和messages，最后在需要用到国际化的组件里，引入<code>FormattedMessage</code>组件（react-intl内置），通过id映射到对应的国际化文件里的属性（例如下面的en_US.js的hello）。即可实现静态国际化。</p>
+</li>
+<li><p>动态国际化，即用户可以通过按钮切换，实现语言的切换。最容易想到的方案就是，在语言模板放在redux的store里，提供一个切换语言的action，改变store里的国家和语言模板，再触发对应的<code>FormattedMessage</code>组件渲染。let’s do it！</p>
+</li>
+</ul>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><ul>
+<li>在src下新建locale文件存放国际化语言的文件，这里我们新建了en_US.js和zh_CN.js。</li>
+</ul>
+<p><strong>en_US.js</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> en_US = &#123;</span><br><span class="line">  hello: <span class="string">'Hello, world!'</span>,</span><br><span class="line">  name: <span class="string">'my name is &#123;name&#125;'</span></span><br><span class="line">&#125;    </span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> en_US;</span><br></pre></td></tr></table></figure></p>
+<p><strong>zh_CN.js</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> zh_CN = &#123;</span><br><span class="line">  hello: <span class="string">'你好，世界！'</span>,</span><br><span class="line">  name: <span class="string">'我的名字是 &#123;name&#125;'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> zh_CN;</span><br></pre></td></tr></table></figure></p>
+<p>一个是常规的变量<code>hello</code>，一个是带有变量<code>{name}</code>的字段<code>name</code>。</p>
+<ul>
+<li>react-intl的<code>IntlProvider</code>组件类似redux的<code>Provider</code>组件，需要在全局引入。所以我们封装一下<code>Intl.jsx</code>组件，将redux和<code>IntlProvider</code>相结合。</li>
+</ul>
+<p><strong>Intl.jsx</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; addLocaleData, IntlProvider &#125; <span class="keyword">from</span> <span class="string">'react-intl'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span>;</span><br><span class="line"><span class="keyword">import</span> zh_CN <span class="keyword">from</span> <span class="string">'./locale/lang/zh_CN'</span>;</span><br><span class="line"><span class="keyword">import</span> en_US <span class="keyword">from</span> <span class="string">'./locale/lang/en_US.js'</span>;</span><br><span class="line"><span class="keyword">import</span> zh <span class="keyword">from</span> <span class="string">'react-intl/locale-data/zh'</span>;</span><br><span class="line"><span class="keyword">import</span> en <span class="keyword">from</span> <span class="string">'react-intl/locale-data/en'</span>;</span><br><span class="line"></span><br><span class="line">addLocaleData([...zh,...en]);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Inter</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">let</span> &#123; locale, localeMessage, children &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;IntlProvider key=&#123;locale&#125; locale=&#123;locale&#125; messages=&#123;localeMessage&#125;&gt;</span><br><span class="line">        &#123;children&#125;</span><br><span class="line">      &lt;<span class="regexp">/IntlProvider&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">function chooseLocale(val) &#123;</span></span><br><span class="line"><span class="regexp">  let _val = val || navigator.language.split('_')[0];</span></span><br><span class="line"><span class="regexp">  switch (_val) &#123;</span></span><br><span class="line"><span class="regexp">    case 'en':</span></span><br><span class="line"><span class="regexp">      return en_US;</span></span><br><span class="line"><span class="regexp">    case 'zh':</span></span><br><span class="line"><span class="regexp">      return zh_CN;</span></span><br><span class="line"><span class="regexp">    default:</span></span><br><span class="line"><span class="regexp">      return en_US;</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">const mapStateToProps = (state, ownProps) =&gt; (&#123;</span></span><br><span class="line"><span class="regexp">  locale: state.root.language,</span></span><br><span class="line"><span class="regexp">  localeMessage: chooseLocale(state.root.language)</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">let Intl = connect(mapStateToProps)(Inter);</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default Intl;</span></span><br></pre></td></tr></table></figure></p>
+<p>解释一下这个组件，组件是将redux里的数据绑定到<code>IntlProvider</code>组件上，<code>addLocaleData</code>函数添加需要本地化的语言，这个需要声明。redux中传递两个props，<code>locale</code>代表当前语言，<code>localeMessage</code>代表locale里的语言文件内容。</p>
+<p><strong>这里有一个很关键的地方，即key属性。IntlProvider中的属性变更并不会触发<code>FormattedMessage</code>重新渲染，刚开始想要forceUpdate强制更新组件，后来上网查了一个解决方案，在组件中加入key，就能解决这个问题</strong></p>
+<ul>
+<li>在实际使用语言的组件中引入<code>FormattedMessage</code>，当然react-intl还支持其他类型的转换组件，比如时间类型<code>FormattedDate</code>等等。可从官网上查询API。</li>
+</ul>
+<p><strong>App.js</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> logo <span class="keyword">from</span> <span class="string">'./logo.svg'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'./App.css'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; FormattedMessage &#125; <span class="keyword">from</span> <span class="string">'react-intl'</span>;</span><br><span class="line"><span class="keyword">import</span> actions <span class="keyword">from</span> <span class="string">'../actions/index.js'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  changeLanguage() &#123;</span><br><span class="line">    <span class="keyword">let</span> lang = <span class="keyword">this</span>.props.locale;</span><br><span class="line">    lang = lang === <span class="string">'zh'</span> ? <span class="string">'en'</span> : <span class="string">'zh'</span>;</span><br><span class="line">    <span class="keyword">this</span>.props.changeLanguage(lang);</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; locale &#125; = <span class="keyword">this</span>.props;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div className=<span class="string">"App"</span>&gt;</span><br><span class="line">        &lt;header className=<span class="string">"App-header"</span>&gt;</span><br><span class="line">          &lt;img src=&#123;logo&#125; className=<span class="string">"App-logo"</span> alt=<span class="string">"logo"</span> /&gt;</span><br><span class="line">          &lt;h1 className=<span class="string">"App-title"</span>&gt;</span><br><span class="line">            &lt;FormattedMessage</span><br><span class="line">              id=<span class="string">"hello"</span></span><br><span class="line">            /&gt;</span><br><span class="line">          &lt;<span class="regexp">/h1&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>header&gt;</span><br><span class="line">        &lt;p className=<span class="string">"App-intro"</span>&gt;</span><br><span class="line">          &lt;FormattedMessage</span><br><span class="line">            id=<span class="string">"name"</span></span><br><span class="line">            values=&#123;&#123; <span class="attr">name</span>: <span class="xml"><span class="tag">&lt;<span class="name">b</span>&gt;</span>&#123;'carroll'&#125;<span class="tag">&lt;/<span class="name">b</span>&gt;</span></span> &#125;&#125;</span><br><span class="line">          /&gt;</span><br><span class="line">        &lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">        &lt;button onClick=&#123;() =&gt; this.changeLanguage()&#125;&gt;&#123;locale === 'zh' ? '切换英文' : 'change chinese'&#125;&lt;/</span>button&gt;</span><br><span class="line"></span><br><span class="line">      &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">const mapStateToProps = (state, ownProps) =&gt; (&#123;</span></span><br><span class="line"><span class="regexp">  locale: state.root.language,</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br><span class="line"><span class="regexp">const mapDispatchToProps = (dispatch, ownProps) =&gt; (&#123;</span></span><br><span class="line"><span class="regexp">  changeLanguage: (val) =&gt; dispatch(actions.changeLanguage(val))</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br><span class="line"><span class="regexp">export default connect(</span></span><br><span class="line"><span class="regexp">  mapStateToProps,</span></span><br><span class="line"><span class="regexp">  mapDispatchToProps</span></span><br><span class="line"><span class="regexp">)(App);</span></span><br></pre></td></tr></table></figure></p>
+<p>App.js主要实现了两个功能，一个实现动态切换的action，一个<code>FormattedMessage</code>id与数据的绑定。</p>
+<ul>
+<li><p>最后在根文件引入<code>Intl.jsx</code>即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ... 省略前面的引入</span></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">    &lt;<span class="built_in">Intl</span>&gt;</span><br><span class="line">      &lt;App /&gt;</span><br><span class="line">    &lt;<span class="regexp">/Intl&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>Provider&gt;,</span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">'root'</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下面是github上的源码</p>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>整体实现下来，动态的国际化切换也没有多难，但是我们要有思考。把国际化的数据放在redux中是否有些浪费，可否不引入<code>FormattedMessage</code>也能解决文字的切换，在<code>IntlProvider</code>上绑定key是否会造成其他无关组件的重新渲染。这些都是我们需要考虑的问题。</p>
+<p><strong>如果错误请指出，如果对您有帮助，麻烦点个赞</strong></p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+        <div class="nav-previous">
+          <a href="/hexo-build/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+        </div>
+      
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>Hexo &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>

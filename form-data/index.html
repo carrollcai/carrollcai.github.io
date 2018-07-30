@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="John Doe">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="Element-UI通过构造FormData对象上传"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="Hexo"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>Element-UI通过构造FormData对象上传 - Hexo</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            Element-UI通过构造FormData对象上传
+            
+          </h1>
+          <p class="posted-on">
+          2018-07-17
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <ul>
+<li>前言</li>
+</ul>
+<p>后端上传文件需要将header里的<code>Content-Type</code>改为multipart/form-data。我们用的UI框架是Element-UI，它只提供了file类型aciton的上传方式，将url写在action里不好维护和管理。而且如果使用<code>this.$refs.xxx.submit();</code>的方式提交表单。action会执行两次，有一次无效请求。所以我封装了一个upload方法，专供文件上传。</p>
+<ul>
+<li>实现</li>
+</ul>
+<p>代码比较简单，主要是基于axios，axios默认<code>Content-Type</code>为application/json，需要修改header。而且不希望使用API者过早关注FormData（js中用于文本上传的对象）这个对象，他们在调用API时，传递的是JSON对象，在API中转为文本上传支持的FormData对象。</p>
+<p><strong>api.js</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> upload = <span class="function">(<span class="params">url, params</span>) =&gt;</span> params =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> formData = jsonToFormData(params);</span><br><span class="line">  <span class="keyword">const</span> configs = &#123;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="string">'Content-Type'</span>: <span class="string">'multipart/form-data'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> API(url, formData, <span class="string">'post'</span>, configs);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 将json对象转成FormData对象</span></span><br><span class="line"><span class="comment">* 只支持对象，暂不支持数组和多层嵌套。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">jsonToFormData</span>(<span class="params">json</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(json)) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'jsonToFormData dont support Array'</span>);</span><br><span class="line">  <span class="keyword">let</span> formData = <span class="keyword">new</span> FormData();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> x <span class="keyword">in</span> json) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(json[x])) &#123;</span><br><span class="line">      json[x].forEach(<span class="function"><span class="params">val</span> =&gt;</span> formData.append(<span class="string">`<span class="subst">$&#123;x&#125;</span>`</span>, val));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      formData.append(<span class="string">`<span class="subst">$&#123;x&#125;</span>`</span>, json[x]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> formData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中API的实现，就是对axios的一层封装，主要起到拦截器作用和支持restful。</p>
+<p><strong>api.js</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">API</span>(<span class="params">url, params, method = <span class="string">'post'</span>, configs</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 开启全局loading</span></span><br><span class="line">  store.commit(<span class="string">'SHOW_PAGE_LOADING'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(resolve, reject) =&gt; &#123;</span><br><span class="line">    <span class="keyword">let</span> ajx;</span><br><span class="line">    axios[method](url, params, configs);</span><br><span class="line">    ajx.then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">      store.commit(<span class="string">'HIDE_PAGE_LOADING'</span>);</span><br><span class="line">      <span class="comment">// 统一处理返回逻辑</span></span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;).catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">      store.commit(<span class="string">'HIDE_PAGE_LOADING'</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 出现400+，500+错误</span></span><br><span class="line">      errorHandle(err);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面就是对upload这个对象的调用，在api文件中将这个api导出。</p>
+<p><strong>api.js</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  uploadOrderHandleTaskAPI: upload(<span class="string">'www.baidu.com'</span>),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在vuex的action文件中处理这个逻辑</p>
+<p><strong>action.js</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> actions = &#123;</span><br><span class="line">  uploadOrderHandleTask: <span class="function">(<span class="params">&#123; commit &#125;, params</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> API.uploadOrderHandleTaskAPI(params).then(<span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// commit something</span></span><br><span class="line">      <span class="keyword">return</span> res.data;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> actions;</span><br></pre></td></tr></table></figure></p>
+<p>最终只要在页面中调用uploadOrderHandleTask这个action就ok了。这里需要注意，在上传过程中，大多数el-upload的生命周期hook都不起作用，需要借助fileChange和removeFile。</p>
+<p><strong>xxx.vue文件</strong><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">el-form-item</span> <span class="attr">label</span>=<span class="string">"签约合同："</span> <span class="attr">prop</span>=<span class="string">"files"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-upload</span> <span class="attr">class</span>=<span class="string">"upload-demo"</span> <span class="attr">:auto-upload</span>=<span class="string">"false"</span> <span class="attr">:on-change</span>=<span class="string">"fileChange"</span> <span class="attr">:multiple</span>=<span class="string">"false"</span> <span class="attr">:on-remove</span>=<span class="string">"removeFile"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-button</span> <span class="attr">slot</span>=<span class="string">"trigger"</span> <span class="attr">size</span>=<span class="string">"small"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"icon-up margin-right-8"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span>上传文件<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-upload</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">el-form-item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">el-form-item</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-button</span> <span class="attr">type</span>=<span class="string">"primary"</span> @<span class="attr">click</span>=<span class="string">"submitAssignForm()"</span>&gt;</span>确定<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">el-form-item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123; </span></span><br><span class="line"><span class="undefined">  data() &#123;</span></span><br><span class="line"><span class="undefined">    assignForm: &#123;</span></span><br><span class="line"><span class="undefined">      files: []</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">  methods: &#123;</span></span><br><span class="line"><span class="undefined">    fileChange(file, fileList) &#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.assignForm.files.push(file.raw);</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    removeFile(file, fileList) &#123;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 筛选选中的文件</span></span></span><br><span class="line"><span class="javascript">      <span class="keyword">let</span> index = <span class="keyword">this</span>.assignForm.files.findIndex(<span class="function"><span class="params">val</span> =&gt;</span> val.uid === file.raw.uid);</span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.assignForm.files.splice(index, <span class="number">1</span>);</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    submitAssignForm() &#123;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">let</span> params = &#123;</span></span><br><span class="line"><span class="undefined">        fileTypeId: 502,</span></span><br><span class="line"><span class="undefined">        moduleId: 1,</span></span><br><span class="line"><span class="javascript">        files: <span class="keyword">this</span>.assignForm.files</span></span><br><span class="line"><span class="undefined">      &#125;;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">this</span>.uploadOrderHandleTask(params);</span></span><br><span class="line"><span class="undefined">    &#125;,</span></span><br><span class="line"><span class="undefined">    ...mapActions([</span></span><br><span class="line"><span class="javascript">      <span class="string">'uploadOrderHandleTask'</span></span></span><br><span class="line"><span class="undefined">    ])</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>遇到的坑</li>
+</ul>
+<p>因为需要支持上传多个文件，因为我在<code>:multiple=&quot;false&quot;</code>设置了不允许一次上传多个文件，只能一次上传一个，但是允许分批次上传。在我理解中<code>form-data</code>对象应该和<code>x-www-form-urlencoded</code>类型相似，所以针对数组files，上传时会将<code>files</code>改为<code>files[]</code>。所以我当时专门针对数组进行了操作。我在formData.append时特地将数组字段名后面加了<code>[]</code>。代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">jsonToFormData</span>(<span class="params">json</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(json)) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'jsonToFormData dont support Array'</span>);</span><br><span class="line">  <span class="keyword">let</span> formData = <span class="keyword">new</span> FormData();</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> x <span class="keyword">in</span> json) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(json[x])) &#123;</span><br><span class="line">      *****************************************************</span><br><span class="line">      错误代码：json[x].forEach(<span class="function"><span class="params">val</span> =&gt;</span> formData.append(<span class="string">`<span class="subst">$&#123;x&#125;</span>[]`</span>, val));</span><br><span class="line">      正确代码：json[x].forEach(<span class="function"><span class="params">val</span> =&gt;</span> formData.append(<span class="string">`<span class="subst">$&#123;x&#125;</span>`</span>, val));</span><br><span class="line">      *****************************************************</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      formData.append(<span class="string">`<span class="subst">$&#123;x&#125;</span>`</span>, json[x]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> formData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样造成了后端接收不到files这个数组的数据，后来通过postman（api模拟工具）模拟，才发现，原来浏览器已经帮我们做了这件事情，它能检测files是单文件还是多文件，我们无需关心files字段名的改变。</p>
+<ul>
+<li>总结</li>
+</ul>
+<p>在开发过程中，关于http的操作我们应该放在一起，如果通过el-upload的action的方式提交上传文件，会让上传的url不好管理，而且错误的返回也需要单独处理（无法走全局的axios拦截）。希望这篇文章对于有帮助，如果有问题，请及时联系我，谢谢。</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+        <div class="nav-previous">
+          <a href="/dllPlugin/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+        </div>
+      
+      
+        <div class="nav-next">
+          <a href="/hexo-build/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>Hexo &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>

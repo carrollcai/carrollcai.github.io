@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="John Doe">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="新手如何搭建Hexo？"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="Hexo"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>新手如何搭建Hexo？ - Hexo</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            新手如何搭建Hexo？
+            
+          </h1>
+          <p class="posted-on">
+          2018-07-15
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>这篇文章希望送给不会编写代码但是也想搭建属于自己博客的人。如果以前你需要搭建一个博客，别人肯定推荐你用WordPress（基于php，也是一种编程语言），当时（几年前）据说大多数博客都是wordpress搭建。因为在当时WordPress就像bug一样的存在，功能完整，主题丰富，搭建简易，上手简单。我也曾经搭建过一个这样的一个博客。但是对于没有编程基础的人，搭建起来还是有点复杂，需要安装php和mysql环境。你肯定还想把博客发布到公网，让所有人都能访问，如果你没有这样的需求，那我觉得有道云笔记就能满足你的需求，这篇文章也不适合你。下面说一说Hexo的优点吧。</p>
+<ol>
+<li>快。我大概花了一个多小时，就成功搭建了个人网站。但是写教程花了3个小时。。。</li>
+<li>易。搭建教程简单，文章更新方式简单。</li>
+<li>少。无需购买服务器，甚至都不需要你购买域名（域名实名认证真的很坑）。当然你也可以挂载到自己的域名下，下面也会介绍这种方式。</li>
+<li>好吧，我编不下去了。</li>
+</ol>
+<h3 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h3><p>教程参考<a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">hexo中文搭建教程</a>，当然你可以看英文版的<a href="https://hexo.io/docs/" target="_blank" rel="noopener">hexo源网站教程</a>。</p>
+<ul>
+<li>安装</li>
+</ul>
+<p>安装Hexo前你需要确保你的电脑安装了下面两个插件，它们的安装不在本章介绍范围内，可直接参考<a href="https://hexo.io/zh-cn/docs/index.html" target="_blank" rel="noopener">中文安装教程</a>。</p>
+<ul>
+<li><a href="https://nodejs.org/en/" target="_blank" rel="noopener">Node.js</a></li>
+<li><a href="https://git-scm.com/" target="_blank" rel="noopener">Git</a></li>
+</ul>
+<p>Git安装好之后，在命令行（命令行如何调起，这个，看你悟性吧）里查看Git版本号</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git --version</span><br><span class="line"><span class="comment">// git version 2.11.0，有版本号信息即安装成功</span></span><br></pre></td></tr></table></figure>
+<p>node安装好之后，在命令行里输入如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line"><span class="comment">// v9.10.0，会出现一个版本号信息，出现8.x以上版本即说明安装成功</span></span><br><span class="line">npm -v</span><br><span class="line"><span class="comment">// 5.6.0，有版本号信息出现即安装成功</span></span><br></pre></td></tr></table></figure>
+<p>下面安装Hexo</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+<p>等待安装成功，同样输出</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo -v</span><br><span class="line"><span class="comment">// 有版本号信息就成功。</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>建站</li>
+</ul>
+<p>执行下面命令，在当前文件夹下新建博客项目</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<p>用编辑器打开blog文件夹，你就能看到下面的目录结构，推荐使用<a href="https://code.visualstudio.com/" target="_blank" rel="noopener">Visual Studio Code</a>或者<a href="http://www.sublimetext.com/" target="_blank" rel="noopener">Sublime</a>。</p>
+<p><img src="../assets/hexo-build/code-list.png" alt=""></p>
+<p>在命令里执行，本地启动项目<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server</span><br></pre></td></tr></table></figure></p>
+<p>然后在浏览器里打开<code>http://localhost:4000/</code>，看到和下面一样的界面，说明本地已经搭建成功了。</p>
+<p><img src="../assets/hexo-build/hello.png" alt=""></p>
+<p>尝试修改soucre/_posts/hello-world.md文件里内容，浏览器里的内容也会随之改变。<strong>忘记了一个重点，Hexo文章是有markdown格式直接生成的。</strong><a href="https://www.zybuluo.com/mdeditor" target="_blank" rel="noopener">what’s markdown?</a>，就是一种文本格式，网上教程比较多。</p>
+<h3 id="切换主题"><a href="#切换主题" class="headerlink" title="切换主题"></a>切换主题</h3><p>看到这样的界面，你肯定感觉糟糕透了，让我们换一个主题吧。<a href="https://hexo.io/themes/" target="_blank" rel="noopener">主题挑选地址</a>。</p>
+<p>我以一个我选择的主题为例，讲述如何安装，首先挑选一个主题，进入类似<a href="https://github.com/GallenHu/hexo-theme-Daily" target="_blank" rel="noopener">这样一个页面</a>。</p>
+<p>看到下面的内容，很简单，就是将主题，放在你本地的theme目录下，然后重启应用，<strong>注意git clone这个操作，应该在blog的根目录下执行。</strong>，再更改根目录下<code>_config.yml</code>的theme主题。</p>
+<p><img src="../assets/hexo-build/theme.png" alt=""></p>
+<p>应用重启之后应该看到这样的页面，差不多符合我的审美。</p>
+<p><img src="../assets/hexo-build/theme1.png" alt=""></p>
+<h3 id="部署到远端（github）"><a href="#部署到远端（github）" class="headerlink" title="部署到远端（github）"></a>部署到远端（github）</h3><ol>
+<li>注册github账号</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>创建一个repository（仓库）</li>
+</ol>
+<p><img src="../assets/hexo-build/new-repo.png" alt=""></p>
+<ol start="3">
+<li>创建github的域名，<strong>这个域名前缀必须是你的用户名！</strong></li>
+</ol>
+<p><img src="../assets/hexo-build/carrollcai.png" alt=""></p>
+<ol start="4">
+<li>点击设置 创建一个page，，<strong>这里我因为我已经创建过了，直接拿别人图片做案例了</strong></li>
+</ol>
+<p><img src="../assets/hexo-build/launch.png" alt=""></p>
+<p><img src="../assets/hexo-build/theme-content.png" alt=""></p>
+<ol start="5">
+<li>选择一个主题</li>
+</ol>
+<p><img src="../assets/hexo-build/theme-select.png" alt=""></p>
+<p>打开github站点，你应该能看到如下效果</p>
+<p><img src="../assets/hexo-build/theme-site.png" alt=""></p>
+<ol start="6">
+<li>修改hexo站点的配置文件</li>
+</ol>
+<p><img src="../assets/hexo-build/deploy.png" alt=""></p>
+<ol start="7">
+<li>部署安装</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 安装模板插件</span></span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line"></span><br><span class="line"><span class="comment">// 部署</span></span><br><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>访问你的网站，我的是carroll.github.io。</li>
+</ol>
+<p><img src="../assets/hexo-build/theme1.png" alt=""></p>
+<h3 id="发布自己的博客"><a href="#发布自己的博客" class="headerlink" title="发布自己的博客"></a>发布自己的博客</h3><p>在根目录下输入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo <span class="keyword">new</span> <span class="string">"我的文章"</span></span><br><span class="line"><span class="comment">// 开始编辑文章</span></span><br></pre></td></tr></table></figure>
+<p>编辑完文章之后，在根目录发布到网上</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g <span class="comment">//生成静态页面</span></span><br><span class="line">hexo d <span class="comment">//发布</span></span><br></pre></td></tr></table></figure>
+<p>看一下我新写的文章，完美</p>
+<p><img src="../assets/hexo-build/new-post.png" alt=""></p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+        <div class="nav-previous">
+          <a href="/form-data/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+        </div>
+      
+      
+        <div class="nav-next">
+          <a href="/react-intl/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>Hexo &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>

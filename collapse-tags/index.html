@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="John Doe">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="使用element-ui2.0之后el-select的collapse-tags属性"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="Hexo"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>使用element-ui2.0之后el-select的collapse-tags属性 - Hexo</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            使用element-ui2.0之后el-select的collapse-tags属性
+            
+          </h1>
+          <p class="posted-on">
+          2018-07-17
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <blockquote>
+<p>前言，原项目使用<a href="mailto:element-ui@1.4.2" target="_blank" rel="noopener">element-ui@1.4.2</a>，因为原版本el-select组件的不支持collapse-tags属性，效果图如下，所以希望引入2.0版本的collapse-tags属性。但是项目已经在线上稳定运行了，且业务比较复杂，框架升级2.0是不可能的。所以才会有本文的存在，不升级框架但是能使用后续版本的功能。</p>
+</blockquote>
+<ol>
+<li>首先找到node_modules下element-ui模块，在里面找到select组件，如下图，共有4个组件组成，将这4个组件复制到项目src的公共组件，取名select2。</li>
+<li>到github上找element0ui2.0版本以后select的<a href="https://github.com/ElemeFE/element/blob/dev/packages/select/src/select.vue" target="_blank" rel="noopener">源代码</a>。</li>
+</ol>
+<p>模板里主要新增了对collapsetags的判断<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-if</span>=<span class="string">"collapseTags &amp;&amp; selected.length"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-tag</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:closable</span>=<span class="string">"!selectDisabled"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:size</span>=<span class="string">"collapseTagSize"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:hit</span>=<span class="string">"selected[0].hitState"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">type</span>=<span class="string">"info"</span></span></span><br><span class="line"><span class="tag">    @<span class="attr">close</span>=<span class="string">"deleteTag($event, selected[0])"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">disable-transitions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"el-select__tags-text"</span>&gt;</span>&#123;&#123; selected[0].currentLabel &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-tag</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-tag</span></span></span><br><span class="line"><span class="tag">    <span class="attr">v-if</span>=<span class="string">"selected.length &gt; 1"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:closable</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:size</span>=<span class="string">"collapseTagSize"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">type</span>=<span class="string">"info"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">disable-transitions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"el-select__tags-text"</span>&gt;</span>+ &#123;&#123; selected.length - 1 &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-tag</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">transition-group</span> @<span class="attr">after-leave</span>=<span class="string">"resetInputHeight"</span> <span class="attr">v-if</span>=<span class="string">"!collapseTags"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">el-tag</span></span></span><br><span class="line"><span class="tag">    <span class="attr">v-for</span>=<span class="string">"item in selected"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:key</span>=<span class="string">"getValueKey(item)"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:closable</span>=<span class="string">"!selectDisabled"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:size</span>=<span class="string">"collapseTagSize"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">:hit</span>=<span class="string">"item.hitState"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">type</span>=<span class="string">"info"</span></span></span><br><span class="line"><span class="tag">    @<span class="attr">close</span>=<span class="string">"deleteTag($event, item)"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">disable-transitions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"el-select__tags-text"</span>&gt;</span>&#123;&#123; item.currentLabel &#125;&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">el-tag</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">transition-group</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>props里新增这个标签<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">props: &#123;</span><br><span class="line">  collapseTags: <span class="built_in">Boolean</span></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>computed新增一个计算属性<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">computed: &#123;</span><br><span class="line">  selectDisabled() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.disabled || (<span class="keyword">this</span>.elForm || &#123;&#125;).disabled;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>以及methods几个方法</p>
+</blockquote>
+<p>改写deleteTag<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">deleteTag(event, tag) &#123;</span><br><span class="line">  <span class="keyword">let</span> index = <span class="keyword">this</span>.selected.indexOf(tag);</span><br><span class="line">  <span class="keyword">if</span> (index &gt; <span class="number">-1</span> &amp;&amp; !<span class="keyword">this</span>.selectDisabled) &#123;</span><br><span class="line">    <span class="keyword">const</span> value = <span class="keyword">this</span>.value.slice();</span><br><span class="line">    value.splice(index, <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">this</span>.$emit(<span class="string">'input'</span>, value);</span><br><span class="line">    <span class="keyword">this</span>.emitChange(value);</span><br><span class="line">    <span class="keyword">this</span>.$emit(<span class="string">'remove-tag'</span>, tag.value);</span><br><span class="line">  &#125;</span><br><span class="line">  event.stopPropagation();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>新增<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">emitChange(val) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>.valueEquals(<span class="keyword">this</span>.value, val)) &#123;</span><br><span class="line">    <span class="keyword">this</span>.$emit(<span class="string">'change'</span>, val);</span><br><span class="line">    <span class="keyword">this</span>.dispatch(<span class="string">'ElFormItem'</span>, <span class="string">'el.form.change'</span>, val);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>以及valueEquals函数，这里源代码里引用的是公共方法<code>import { valueEquals } from &#39;element-ui/src/utils/util&#39;;</code>，我直接复制到了组件内部<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">valueEquals(a, b) &#123;</span><br><span class="line">  <span class="comment">// see: https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript</span></span><br><span class="line">  <span class="keyword">if</span> (a === b) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">if</span> (!(a <span class="keyword">instanceof</span> <span class="built_in">Array</span>)) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">if</span> (!(b <span class="keyword">instanceof</span> <span class="built_in">Array</span>)) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">if</span> (a.length !== b.length) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i !== a.length; ++i) &#123;</span><br><span class="line">    <span class="keyword">if</span> (a[i] !== b[i]) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后把组件的name改变<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">name: <span class="string">'select2'</span>,</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里切记不能改变componentName，因为element-ui内容实现了一个dispatch函数，绑定到组件的实例上，子组件向上派发主要通过componentName表标识，我就不小心手动修改componentName值引起不必要的麻烦</span></span><br><span class="line">componentName: <span class="string">'ElSelect'</span>,</span><br></pre></td></tr></table></figure></p>
+<p>到这里已经基本完成组件的改造</p>
+<p>外部通过<code>import select2 from &#39;../select2/select.vue&#39;</code>引用，运行，会直接报错，<code>You may need an appropriate loader to handle this file type.</code>，主要是element-ui内部使用了jsx的语法，往下看。</p>
+<p><code>select组件</code>，这里我们看到组件内部引用了element-ui框架的方法和组件。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Emitter <span class="keyword">from</span> <span class="string">'element-ui/src/mixins/emitter'</span>;</span><br><span class="line"><span class="keyword">import</span> Locale <span class="keyword">from</span> <span class="string">'element-ui/src/mixins/locale'</span>;</span><br><span class="line"><span class="keyword">import</span> ElInput <span class="keyword">from</span> <span class="string">'element-ui/packages/input'</span>;</span><br><span class="line"><span class="keyword">import</span> ElSelectMenu <span class="keyword">from</span> <span class="string">'./select-dropdown.vue'</span>;</span><br><span class="line"><span class="keyword">import</span> ElOption <span class="keyword">from</span> <span class="string">'./option.vue'</span>;</span><br><span class="line"><span class="keyword">import</span> ElTag <span class="keyword">from</span> <span class="string">'element-ui/packages/tag'</span>;</span><br><span class="line"><span class="keyword">import</span> ElScrollbar <span class="keyword">from</span> <span class="string">'element-ui/packages/scrollbar'</span>;</span><br><span class="line"><span class="keyword">import</span> debounce <span class="keyword">from</span> <span class="string">'throttle-debounce/debounce'</span>;</span><br><span class="line"><span class="keyword">import</span> Clickoutside <span class="keyword">from</span> <span class="string">'element-ui/src/utils/clickoutside'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; addClass, removeClass, hasClass &#125; <span class="keyword">from</span> <span class="string">'element-ui/src/utils/dom'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; addResizeListener, removeResizeListener &#125; <span class="keyword">from</span> <span class="string">'element-ui/src/utils/resize-event'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; t &#125; <span class="keyword">from</span> <span class="string">'element-ui/src/locale'</span>;</span><br><span class="line"><span class="keyword">import</span> scrollIntoView <span class="keyword">from</span> <span class="string">'element-ui/src/utils/scroll-into-view'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; getValueByPath &#125; <span class="keyword">from</span> <span class="string">'element-ui/src/utils/util'</span>;</span><br></pre></td></tr></table></figure></p>
+<p>所以我们需要在运行时编译的时候，加上jsx语法的解析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add babel-plugin-transform-vue-jsx --save</span><br></pre></td></tr></table></figure></p>
+<p>在.babelrc添加配置项<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"plugins"</span>: [</span><br><span class="line">  <span class="string">"transform-vue-jsx"</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<p>最后还需要webpack.dev.config.js里<code>js loader</code>添加解析路径，这里千万要注意<code>NODE_MODULES_PATH</code>的相对路径是<a href="mailto:`node_modules/._element-ui@1.4.2" target="_blank" rel="noopener">`node_modules/._element-ui@1.4.2</a>@element-ui`，而不是’node_modules/element-ui’。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> NODE_MODULES_PATH = path.join(__dirname, <span class="string">'node_modules/._element-ui@1.4.2@element-ui'</span>);</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">rules: [&#123;</span><br><span class="line">  test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">  loader: <span class="string">"babel-loader"</span>,</span><br><span class="line">  include: [SRC_PATH, NODE_MODULES_PATH], <span class="comment">// 编译的时候，将element-ui用babel-loader编译</span></span><br><span class="line">&#125;]</span><br></pre></td></tr></table></figure></p>
+<p>运行一下，大工告成</p>
+<blockquote>
+<p>当然在打包编译的时候也需要修改webpack配置</p>
+</blockquote>
+<p>修改webpack.prod.config.js<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rules: [&#123;</span><br><span class="line">  test: <span class="regexp">/\.js$/</span>,</span><br><span class="line">  loader: <span class="string">"babel-loader"</span>,</span><br><span class="line">  <span class="comment">// exclude: /node_modules/,</span></span><br><span class="line">  include: [SRC_PATH, NODE_MODULES_PATH], <span class="comment">// 编译的时候，将element-ui用babel-loader编译</span></span><br><span class="line">&#125;]</span><br></pre></td></tr></table></figure></p>
+<p>这里打包编译的时候会出现一个提示，大概意思是代码生成器已取消优化，因为这个文件超过“500KB”的最大值，这里我不太确定，会有什么影响，但是我看打包体积没有增加，那说明src代码里引用的element-ui并没有额外生成。</p>
+<p>last but not least</p>
+<p>以我的水平，暂时只能想到这种解决方案，如果哪位大佬有好的解决方案，请告知小弟，谢谢。</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+        <div class="nav-previous">
+          <a href="/g2/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+        </div>
+      
+      
+        <div class="nav-next">
+          <a href="/vue-sessionStorage/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>Hexo &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
