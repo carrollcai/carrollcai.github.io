@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="carroll">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="卡罗的博客"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="卡罗的博客"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="website" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>卡罗的博客</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            Untitled
+            
+          </h1>
+          <p class="posted-on">
+          2018-07-31
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <hr>
+<h2 id="title-redux-saga笔记"><a href="#title-redux-saga笔记" class="headerlink" title="title: redux-saga笔记"></a>title: redux-saga笔记</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>阅读这篇文章前，我默认你已经掌握了react和redux相关知识，否则，这篇文章对你来说没有太多意义。</p>
+<h3 id="redux-saga背景介绍"><a href="#redux-saga背景介绍" class="headerlink" title="redux-saga背景介绍"></a>redux-saga背景介绍</h3><blockquote>
+<p><code>redux-saga</code> is a library that aims to make application side effects（i.e asynchronous things like data fetch and impure things like accessing the broswer cache）eaiser to manage。</p>
+</blockquote>
+<p><code>redux-saga</code>是一个用于让管理应用的副作用更加简单的库。副作用包括异步获取数据，访问浏览器缓存等。<br>简单点，他就是处理副作用的框架，那他和<code>redux-thunk</code>，<code>redux-promise</code>这些有什么区别？<code>redux-saga</code>使用了ES6的Generator功能，让异步流程像同步流程一样。</p>
+<h3 id="实现一个最简单的异步获取数据的demo"><a href="#实现一个最简单的异步获取数据的demo" class="headerlink" title="实现一个最简单的异步获取数据的demo"></a>实现一个最简单的异步获取数据的demo</h3><p>通过按钮点击触发一个action，这个action触发saga，saga里获取异步数据（通过<code>axios</code>获取mock里的数据），最终处理完触发reducer反馈到视图。</p>
+<p><strong>Demo.jsx</strong>，这个jsx文件比较简单，是一个无状态组件，主要接收父组件的props。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Demo = <span class="function">(<span class="params">&#123; list, children, onClick &#125;</span>) =&gt;</span> (</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;div test=&#123;list&#125;&gt;</span><br><span class="line">      &#123;list &amp;&amp; list.map(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">key</span>=<span class="string">&#123;item.id&#125;</span>&gt;</span></span></span><br><span class="line"><span class="xml">          &#123;item.date&#125;</span></span><br><span class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>)</span><br><span class="line">      &#125;)&#125;</span><br><span class="line">      &lt;div style=&#123;&#123;<span class="attr">marginTop</span>: <span class="number">20</span>&#125;&#125;&gt;<span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">      &lt;button onClick=&#123;id =&gt; onClick(<span class="string">'1'</span>)&#125;&gt;</span><br><span class="line">        Demo获取数据</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>div&gt;</span><br><span class="line">  &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">);</span></span><br><span class="line"><span class="regexp">export default Demo;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>DemoContainer.jsx</strong>，这是一个高阶组件，主要负责业务流程逻辑的处理。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span>;</span><br><span class="line"><span class="keyword">import</span> actions <span class="keyword">from</span> <span class="string">'../../actions/index.js'</span>;</span><br><span class="line"><span class="keyword">import</span> Demo <span class="keyword">from</span> <span class="string">'./Demo'</span>;</span><br><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function">(<span class="params">state, ownProps</span>) =&gt;</span> (&#123;</span><br><span class="line">  list: state.demo.list</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function">(<span class="params">dispatch, ownProps</span>) =&gt;</span> (&#123;</span><br><span class="line">  onClick: <span class="function">(<span class="params">id</span>) =&gt;</span> dispatch(actions.getDemo(id))</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(Demo);</span><br></pre></td></tr></table></figure></p>
+<p><strong>demoAction.js</strong>，这是一个action，服务于dispatch。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> types <span class="keyword">from</span> <span class="string">'../constants/types'</span>;</span><br><span class="line"><span class="keyword">const</span> actions = &#123;</span><br><span class="line">  getDemo(id) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      type: types.SAGA_DEMO,</span><br><span class="line">      payload: id</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> actions;</span><br></pre></td></tr></table></figure></p>
+<p><strong>demoSaga.js</strong>，saga文件，处理异步流程。首先<code>function*</code>表示getDemo是一个Generator函数，内部通过yield控制异步流程。下面是saga中几个常用副作用函数：</p>
+<ul>
+<li>call，接受一个返回promise的函数，使用生成器的方式来把异步变同步。</li>
+<li>put，相当于redux的dispatch，用来触发reducer更新store。put是异步的。</li>
+<li>takeEvery，会在接收到action之后不断产生新的副作用。与之对应的takeLatest，根据字面意思也能理解，即相同action触发，之前aciton未执行完，会取消之前aciton，只有最后一次才能生效。</li>
+<li>take和fork，这里没有用到。take会阻塞流程，直到相应aciton触发，fork是无阻塞执行。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> types <span class="keyword">from</span> <span class="string">'../constants/types'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; call, put, take, takeEvery &#125; <span class="keyword">from</span> <span class="string">'redux-saga/effects'</span>;</span><br><span class="line"><span class="keyword">import</span> API <span class="keyword">from</span> <span class="string">'../utils/api.js'</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">getDemo</span>(<span class="params">action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> api = <span class="function"><span class="params">()</span> =&gt;</span> API.getDemo(action.payload).then(<span class="function"><span class="params">res</span> =&gt;</span> res.data);</span><br><span class="line">  <span class="keyword">const</span> res = <span class="keyword">yield</span> call(api);</span><br><span class="line">  <span class="keyword">yield</span> put(&#123;</span><br><span class="line">    type: types.DEMO,</span><br><span class="line">    payload: res</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">rootSage</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">yield</span> takeEvery(types.SAGA_DEMO, getDemo);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> rootSage;</span><br></pre></td></tr></table></figure>
+<p><strong>api.js</strong>，处理请求的发起和接收。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetch = <span class="function">(<span class="params">url, params, method</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> ajx;</span><br><span class="line">    <span class="keyword">if</span> (method &amp;&amp; axios[method]) &#123;</span><br><span class="line">      ajx = axios[method](url, params);</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">      ajx = axios.post(url, params);</span><br><span class="line">    &#125;</span><br><span class="line">    ajx.then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">String</span>(res.data.errorInfo.code) === <span class="string">'200'</span>) &#123;</span><br><span class="line">        resolve(res.data);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        reject(res.data.errorInfo.message);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;).catch(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 出现400+，500+错误</span></span><br><span class="line">      errorHandle(err);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p><strong>demoReducer.js</strong>，更新store。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> types <span class="keyword">from</span> <span class="string">'../constants/types'</span>;</span><br><span class="line"><span class="keyword">const</span> getDemoReducer = <span class="function">(<span class="params">state = [], action</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> types.DEMO:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        list: action.payload.list</span><br><span class="line">      &#125;;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> getDemoReducer;</span><br></pre></td></tr></table></figure></p>
+<p><strong>index.js</strong>，汇总所有的reducer<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; combineReducers &#125; <span class="keyword">from</span> <span class="string">'redux'</span>;</span><br><span class="line"><span class="keyword">import</span> demo <span class="keyword">from</span> <span class="string">'./demo'</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> combineReducers(&#123;</span><br><span class="line">  demo</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p><strong>index.js</strong>，项目入口文件<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">'react-dom'</span>;</span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./containers/App'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'react-redux'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; createStore, applyMiddleware &#125; <span class="keyword">from</span> <span class="string">'redux'</span>;</span><br><span class="line"><span class="keyword">import</span> rootReducer <span class="keyword">from</span> <span class="string">'./reducers'</span>;</span><br><span class="line"><span class="keyword">import</span> createSageMiddleware <span class="keyword">from</span> <span class="string">'redux-saga'</span>;</span><br><span class="line"><span class="keyword">import</span> sagas <span class="keyword">from</span> <span class="string">'./sagas'</span>;</span><br><span class="line"><span class="keyword">const</span> sagaMiddleware = createSageMiddleware();</span><br><span class="line"><span class="keyword">const</span> store = createStore(</span><br><span class="line">  rootReducer, </span><br><span class="line">  applyMiddleware(sagaMiddleware)</span><br><span class="line">);</span><br><span class="line">sagaMiddleware.run(sagas);</span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">    &lt;App /&gt;</span><br><span class="line">  &lt;<span class="regexp">/Provider&gt;,</span></span><br><span class="line"><span class="regexp">  document.getElementById('root'));</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="感悟"><a href="#感悟" class="headerlink" title="感悟"></a>感悟</h3><p>使用<code>redux-saga</code>像是在写同步代码，且API直观简单，简化了异步流程和增强了异步控制。基于saga的阿里框架<a href="https://github.com/dvajs/dva" target="_blank" rel="noopener">dva</a>，更是简便。react把状态管理交给社区是明智的，衍生出这么多优秀的副作用处理框架，包括最近很火的<code>redux-observable</code>，每次新技术的出现，真是让开发者又爱又恨啊。</p>
+<p>源码地址：<a href="https://github.com/carrollcai/react-framework/tree/saga" target="_blank" rel="noopener">https://github.com/carrollcai/react-framework/tree/saga</a></p>
+<p>写作时间：<br>20180731</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/webpack-config/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>卡罗的博客 &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
