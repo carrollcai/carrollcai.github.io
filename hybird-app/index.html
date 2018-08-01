@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="carroll">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="hybird App原理"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="卡罗的博客"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>hybird App原理 - 卡罗的博客</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            hybird App原理
+            
+          </h1>
+          <p class="posted-on">
+          2018-08-01
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h3 id="现有混合技术"><a href="#现有混合技术" class="headerlink" title="现有混合技术"></a>现有混合技术</h3><p>Hybird App，俗称混合应用，即融合了native和web技术进行开发的移动应用。下面三种技术主要在UI渲染机制上不同：</p>
+<ol>
+<li>基于Webview UI的基础方案。市面上主流，例如微信SDK，通过JsBridge完成H5和Native的双向通讯，从而赋予H5一定的原生能力。</li>
+<li>基于Native UI的方案，例如React-native、Weex等。在赋予H5原生API能力的基础上，进一步通过JsBridge将js解析成虚拟dom传递到native，并使用原生渲染。</li>
+<li>小程序方案。通过定制化的JsBridge，使用双Webview和双线程的模式隔离了JS逻辑和UI渲染，形成特殊的开发模式，加强了H5和原生的混合程度，提高了页面性能和开发体验。</li>
+</ol>
+<p><img src="../assets/hybird-app/webview.png" alt=""></p>
+<h3 id="Hybird带来的好处"><a href="#Hybird带来的好处" class="headerlink" title="Hybird带来的好处"></a>Hybird带来的好处</h3><p>Hybird方案能利用H5强大的开发和迭代能力，又能赋予H5强大的底层能力和用户体验，同时能复用现有的成熟Native组件。</p>
+<h3 id="Hybird原理"><a href="#Hybird原理" class="headerlink" title="Hybird原理"></a>Hybird原理</h3><p>Hybird App的本质，是在原生App中，使用Webview作为容器直接承载web页面。最核心的点就是Native和H5之间的双向通讯层，其实这里也可以理解为我们需要一套跨语言通讯方案，来完成Native（Java/Objective-c）与JavaScript的通讯。这个方案就是JsBridge。</p>
+<p><strong>（一）JavaScript通知Native</strong></p>
+<p>基于Webview的机制和开放的API，实现这个功能有三种常见的方案：</p>
+<ul>
+<li>API注入，Native获取JavaScript环境上下文，并直接在上面挂载对象挥着方案，使js可以直接调用，但IOS和Android需要分别挂载。</li>
+<li>Webview中的prompt、console、alert拦截。</li>
+<li>Webview URL Scheme 跳转拦截。但是又限制长度，因此需要制定新的参数传递规则，使用函数调用的方式。原理是，Native可以直接调用JS方法并直接获取函数的返回值。</li>
+</ul>
+<p><strong>（二）Native通知JavaScript</strong></p>
+<p>由于Native可以算作H5的宿主，因此拥有更大的权限，Native可以直接通过Webview API直接执行JS代码。</p>
+<p><img src="../assets/hybird-app/bridge.png" alt=""></p>
+<p><strong>（三）Jsbridge的接入</strong></p>
+<p>图片解释，从上图可以看出，分为两个部分：</p>
+<ul>
+<li>JS部分（bridge）：在JS环境中注入bridge的实现代码，包含协议的拼装/发送/参数池/回调池等。</li>
+<li>Native部分（SDK）：在客户端中birdge的功能映射代码，使用URL拦截解析/环境信息的注入/通用功能映射等功能</li>
+</ul>
+<p>可以将这两部分封装成一个Native SDK，由客户端统一引入。客户端初始化一个Webview打开页面时，如果页面在白名单中，会直接在HTML头部注入对应的bridge.js。这样做的好处：：</p>
+<ul>
+<li>双方代码统一维护。更新时，只需更新客户端SDK，不会出现版本兼容问题。</li>
+<li>App接入方便，只需按文档接入最新的SDK，即可运行Hybird方案</li>
+<li>H5端无需关注，有利于将bridge开放给第三方页面使用。</li>
+</ul>
+<p><strong>（四）App中H5的接入方式</strong></p>
+<ol>
+<li>在线H5，客户端在Webview中直接打开URL。好处：<ul>
+<li>独立性强，有独立的开发、调试、更新、上线能力。</li>
+<li>资源通过服务端引入，不影响客户端体积。</li>
+<li>接入成本低，完全的热更新机制。</li>
+</ul>
+</li>
+</ol>
+<p>劣势：</p>
+<pre><code>- 完全依赖网络，离线无法使用
+- 首屏加载依赖网络。
+</code></pre><ol start="2">
+<li>客户端内置H5。优势：<ul>
+<li>本地化，首屏加载快，体验接近原生。</li>
+<li>不依赖网络，离线运行。</li>
+</ul>
+</li>
+</ol>
+<p>劣势：</p>
+<pre><code>- 开发流程、更新机制复杂，需要客户端和服务端共同合作
+- 增加App包体积
+</code></pre><p>原文来自：<a href="https://mp.weixin.qq.com/s/x-mmH0g3Y0AaFDqmIDzdhQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/x-mmH0g3Y0AaFDqmIDzdhQ</a></p>
+<p>摘录时间：<br>20180801</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/redux-saga/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>卡罗的博客 &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
