@@ -134,8 +134,11 @@
 <p>修改完配置之后，可以测试提交代码，<code>git commit</code>会自动执行eslint校验代码规范。这个时候你就完成了代码提交检测。当然我们还可以基于此实现更多的功能，其实每次提交代码的时候，eslint都是检测全量的文件，我们希望它只检测需要提交的文件，我们就可以做一个<strong>动态校验本次提交的代码</strong>的功能。以及我们在<code>pre-push</code>钩子里跑Unit test（单元测试），当然这个可以只在生产分支执行，其他分支不执行。下面我们来完成<strong>动态校验本次提交的代码</strong>的功能。</p>
 <h3 id="动态校验本次提交的代码"><a href="#动态校验本次提交的代码" class="headerlink" title="动态校验本次提交的代码"></a>动态校验本次提交的代码</h3><p>我们还是借助<code>pre-commit</code>钩子，只不过不再直接使用eslint校验所有文件，而是校验本次提交的文件。</p>
 <p>首先修改package.json配置<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"script"</span>: &#123;</span><br><span class="line">  <span class="string">"lint"</span>: <span class="string">"eslint --ext .js src --cache"</span></span><br><span class="line">&#125;,</span><br><span class="line"><span class="string">"pre-commit"</span>: [</span><br><span class="line">  <span class="string">"lint"</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
-<p>因为执行了<strong>–cache</strong>同时会生成<code>.eslintcache</code>文件，需要在<code>.gitignore</code>中屏蔽这个文件。OK，每次eslint会从cache中比对文件有没有变更，最终只校验变更的文件。</p>
+<p>因为执行了<strong>–cache</strong>同时会生成<code>.eslintcache</code>文件，需要在<code>.gitignore</code>中屏蔽这个文件。OK，每次eslint会从cache中比对文件有没有变更，最终只校验变更的文件。还有一个<strong>–fix</strong>命令，会自动修复一些空格或者空行，但是不会修复语法错误，这里不做介绍。</p>
 <h3 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h3><p>当然我刚开始查资料的时候，也是遇到了很多坑，比如全局安装eslint，这种全局的模块，团队里就很难做到统一，坑是无法预料的。比如<code>pre-commit</code>校验的时候触发手写的脚本。其实正常的校验需求，eslint都已经集成了这些功能，真的有特殊需求了，才会去写脚本，写脚本应该在原有功能实现不了之后才要考虑的。</p>
+<blockquote>
+<p>参考资料：<a href="https://eslint.org/docs/user-guide/command-line-interface" target="_blank" rel="noopener">https://eslint.org/docs/user-guide/command-line-interface</a></p>
+</blockquote>
 <p>写作时间：<br>20180802</p>
 
         </div>
