@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="carroll">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="pre-commit + eslint，实现代码提交检测"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="卡罗的博客"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>pre-commit + eslint，实现代码提交检测 - 卡罗的博客</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            pre-commit + eslint，实现代码提交检测
+            
+          </h1>
+          <p class="posted-on">
+          2018-08-02
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h3 id="为什么需要代码提交检测？"><a href="#为什么需要代码提交检测？" class="headerlink" title="为什么需要代码提交检测？"></a>为什么需要代码提交检测？</h3><p>现代脚手架（例如vue-cli）都会默认集成eslint，有助于项目维护和多人开发。但是eslint只会在本地开发的时候有校验，并不会阻止eslint warning提交到公共代码库，每次<code>git pull</code>的时候，看到多了一堆warning，是自己手动改了，还是通知上传同事改完再上传？有时候我自己都会把warning推上去，所以这个过程需要强制规范，代码提交前用eslint检测代码中是否有报错，报错不能提交。结合git的生命周期钩子<code>pre-commit</code>（字面理解，在commit提交前），做eslint校验。</p>
+<h3 id="Talk-is-cheap"><a href="#Talk-is-cheap" class="headerlink" title="Talk is cheap"></a>Talk is cheap</h3><p>这里我们使用<code>npm eslint</code>命令而不是<code>eslint</code>，主要是安装全局的eslint需要安装很多依赖，而且全局的eslint容易和项目里的eslint版本不同，校验规则可能不同，所以这里借助npm下面eslint模块。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install eslint --save-dev</span><br></pre></td></tr></table></figure>
+<p>在.git目录下有一个hooks文件，专门放置git生命钩子触发的内容。查看有哪些生命周期钩子。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在项目根目录下执行</span></span><br><span class="line"><span class="built_in">cd</span> .git/hooks</span><br><span class="line"><span class="comment"># mac 下</span></span><br><span class="line">ls -la</span><br><span class="line"><span class="comment"># window下</span></span><br><span class="line">ll</span><br></pre></td></tr></table></figure></p>
+<p>这里我们也不需要自定义<code>pre-commit</code>生命周期钩子里的内容，有现成的npm库<code>pre-commit</code><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install pre-commit --save-dev</span><br></pre></td></tr></table></figure></p>
+<p>修改package.json中配置<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"script"</span>: &#123;</span><br><span class="line">  <span class="string">"lint"</span>: <span class="string">"eslint --ext .js src"</span></span><br><span class="line">&#125;,</span><br><span class="line"><span class="string">"pre-commit"</span>: [</span><br><span class="line">  <span class="string">"lint"</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<p>修改完配置之后，可以测试提交代码，<code>git commit</code>会自动执行eslint校验代码规范。这个时候你就完成了代码提交检测。当然我们还可以基于此实现更多的功能，其实每次提交代码的时候，eslint都是检测全量的文件，我们希望它只检测需要提交的文件，我们就可以做一个<strong>动态校验本次提交的代码</strong>的功能。以及我们在<code>pre-push</code>钩子里跑Unit test（单元测试），当然这个可以只在生产分支执行，其他分支不执行。下面我们来完成<strong>动态校验本次提交的代码</strong>的功能。</p>
+<h3 id="动态校验本次提交的代码"><a href="#动态校验本次提交的代码" class="headerlink" title="动态校验本次提交的代码"></a>动态校验本次提交的代码</h3><p>我们还是借助<code>pre-commit</code>钩子，只不过不再直接使用eslint校验所有文件，而是校验本次提交的文件。</p>
+<p>首先修改package.json配置<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"script"</span>: &#123;</span><br><span class="line">  <span class="string">"lint"</span>: <span class="string">"eslint --ext .js src --cache"</span></span><br><span class="line">&#125;,</span><br><span class="line"><span class="string">"pre-commit"</span>: [</span><br><span class="line">  <span class="string">"lint"</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure></p>
+<p>因为执行了<strong>–cache</strong>同时会生成<code>.eslintcache</code>文件，需要在<code>.gitignore</code>中屏蔽这个文件。OK，每次eslint会从cache中比对文件有没有变更，最终只校验变更的文件。</p>
+<h3 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h3><p>当然我刚开始查资料的时候，也是遇到了很多坑，比如全局安装eslint，这种全局的模块，团队里就很难做到统一，坑是无法预料的。比如<code>pre-commit</code>校验的时候触发手写的脚本。其实正常的校验需求，eslint都已经集成了这些功能，真的有特殊需求了，才会去写脚本，写脚本应该在原有功能实现不了之后才要考虑的。</p>
+<p>写作时间：<br>20180802</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/pyramid-principle/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>卡罗的博客 &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
