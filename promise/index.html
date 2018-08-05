@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="carroll">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="Promise手写实现"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="卡罗的博客"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>Promise手写实现 - 卡罗的博客</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            Promise手写实现
+            
+          </h1>
+          <p class="posted-on">
+          2018-08-03
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>网上铺篇盖地的Promise教学，很杂，有些人是实现了，但是bug很多。我希望能用最简单的方式，由外入内，逐层剖析，让你理解Promise实现。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pro = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">  resolve(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line">pro.then(<span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// do something</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>最简单的Promise的使用，应该向上面这样。pro是<code>Promise</code>的实例，<code>Promise</code>本质就是一个方法，入参也为一个方法，方法里入参为<code>resolve</code>、<code>reject</code>，分别带别成功返回和返回错误信息，两者互斥。pro实例上有<code>then</code>方法，它是本质一个回调函数，链式调用代替callback hell（回调地狱），并且它的参数来自于上一个调用对象的返回值。我们首先实现Promise函数和then的回调。再思考一下，<code>then</code>方法需要在之前的调用对象执行完之后才执行，我们可以借助<code>setTimeout</code>，延后执行方法，先收集then方法，随后逐步执行。Promise机制内部有3种状态，<strong>pedding</strong>，<strong>Fulfilled</strong>，<strong>rejected</strong>，分别代表现在Promise内部状态。pending可以转化为fulfilled或rejected并且只能转化一次，也就是说如果pending转化到fulfilled状态，那么就不能再转化到rejected。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pro = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">  resolve(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line">pro.then(<span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res + <span class="number">1</span>);</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'time out'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> res + <span class="number">1</span>;</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们希望输出的结果顺序</span></span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// time out</span></span><br></pre></td></tr></table></figure>
+<p>下面是代码实现，我们先不实现reject，原理是一样的，后面逐步添加。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Promise</span>(<span class="params">func</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> self = <span class="keyword">this</span>; <span class="comment">// 闭包储存之前的所有状态和方法</span></span><br><span class="line">  self.value = <span class="literal">null</span>; <span class="comment">// 当前的返回值</span></span><br><span class="line">  self.status = <span class="string">'pedding'</span>; <span class="comment">// Promise内部状态</span></span><br><span class="line">  self.onFulfilledCallbacks = []; <span class="comment">// 保存then方法的数组</span></span><br><span class="line">  <span class="comment">// resolve方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">response</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 延后执行then方法</span></span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 执行resolve</span></span><br><span class="line">  func(resolve);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// then方法主要收集之后要执行的方法,并将当前的返回值传递下去。</span></span><br><span class="line"><span class="built_in">Promise</span>.prototype.then = <span class="function"><span class="keyword">function</span>(<span class="params">onFulfilled</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> value = <span class="keyword">this</span>.value;</span><br><span class="line">  <span class="comment">// 只有状态为pedding状态时，才会将方法添加到onFulfilledCallbacks队列中。fulfilled（完成状态）时不添加。</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.status ==== <span class="string">'pedding'</span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.onFulfilledCallbacks.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> onFulfilled(value);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 借用JQ的链式调用，返回当前对象，让后面链式调用的对象，还是当前对象。</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面主要实现resolve内部，入参为resolve返回值。根据then方法的描述，resolve方法应该是循环实现then函数收集的方法，并且更新当前返回值。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">response</span>) </span>&#123;</span><br><span class="line">  self.value = response;</span><br><span class="line">  self.status = <span class="string">'fulfilled'</span>;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    self.onFulfilledCallbacks.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">      <span class="comment">// 执行then内部方法，并且更新当前then返回值</span></span><br><span class="line">      <span class="keyword">let</span> value = callback(self.value);</span><br><span class="line">      self.value = value;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里有一个小问题，当Promise是异步状态，在异步状态之前添加的then方法都添加到了队列里，但异步成功之后，添加的then方法将不会执行。因为我们这个then方法收集是同步的，所以需要增加一个异步添加then方法之后，也可执行的操作。</p>
+<p><strong>改进then方法。</strong><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.prototype.then = <span class="function"><span class="keyword">function</span>(<span class="params">onfulfilled</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> value = <span class="keyword">this</span>.value;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.status === <span class="string">'pedding'</span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.onFulfilledCallbacks.push(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> onFulfilled(value);</span><br><span class="line">    &#125;);</span><br><span class="line">  <span class="comment">// 直接执行then方法。</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    onfulfilled(<span class="keyword">this</span>.value);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样就显示了完成了我们上面所期待的输出顺序。但是这会有一个问题，来自于then方法的<strong>return this</strong>。因为每次返回的都是之前对象，如果then包含的是一个新的Promise？示例如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pro = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">  resolve(<span class="number">1</span>);</span><br><span class="line">&#125;);</span><br><span class="line">pro.then(<span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 包含一个异步请求</span></span><br><span class="line">    http.get(url, <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">      resolve(res);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>如果在then方法中返回一个新的Promise，并且Promise中包含异步方法。如果是按照之前then函数返回当前对象，就不能形成链式调用顺序，所以我们需要then方法中返回一个新的Promise，而不是this。</p>
+<p>改造then方法，后续更新</p>
+<p>写作时间：<br>20180805</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/pre-commit/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>卡罗的博客 &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
