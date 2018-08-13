@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="carroll">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="JavaScript中二叉树应用"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="卡罗的博客"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>JavaScript中二叉树应用 - 卡罗的博客</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            JavaScript中二叉树应用
+            
+          </h1>
+          <p class="posted-on">
+          2018-08-13
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>二叉树算法<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">	<span class="function"><span class="keyword">function</span> <span class="title">BinaryTree</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">		<span class="keyword">var</span> Node = <span class="function"><span class="keyword">function</span>(<span class="params">key</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">			<span class="keyword">this</span>.key = key;</span></span><br><span class="line"><span class="javascript">			<span class="keyword">this</span>.left = <span class="literal">null</span>;</span></span><br><span class="line"><span class="javascript">			<span class="keyword">this</span>.right = <span class="literal">null</span>;</span></span><br><span class="line"><span class="undefined">		&#125;</span></span><br><span class="line"><span class="javascript">		<span class="keyword">var</span> root = <span class="literal">null</span>;</span></span><br><span class="line"><span class="javascript">		<span class="keyword">var</span> insertNode = <span class="function"><span class="keyword">function</span>(<span class="params">node, newNode</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">			<span class="keyword">if</span> (node.key &gt; newNode.key) &#123;</span></span><br><span class="line"><span class="javascript">				<span class="keyword">if</span> (node.left === <span class="literal">null</span>) &#123;</span></span><br><span class="line"><span class="undefined">					node.left = newNode;</span></span><br><span class="line"><span class="javascript">				&#125;<span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="undefined">					insertNode(node.left, newNode);</span></span><br><span class="line"><span class="undefined">				&#125;</span></span><br><span class="line"><span class="javascript">			&#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="javascript">				<span class="keyword">if</span> (node.right === <span class="literal">null</span>) &#123;</span></span><br><span class="line"><span class="undefined">					node.right = newNode;</span></span><br><span class="line"><span class="javascript">				&#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="undefined">					insertNode(node.right, newNode)</span></span><br><span class="line"><span class="undefined">				&#125;</span></span><br><span class="line"><span class="undefined">			&#125;</span></span><br><span class="line"><span class="undefined">		&#125;</span></span><br><span class="line"><span class="javascript">		<span class="keyword">this</span>.insert = <span class="function"><span class="keyword">function</span>(<span class="params">key</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">			<span class="keyword">var</span> newNode = <span class="keyword">new</span> Node(key)</span></span><br><span class="line"><span class="javascript">			<span class="keyword">if</span> (root === <span class="literal">null</span>) &#123;</span></span><br><span class="line"><span class="undefined">				root = newNode;</span></span><br><span class="line"><span class="javascript">			&#125; <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="undefined">				insertNode(root, newNode);</span></span><br><span class="line"><span class="undefined">			&#125;</span></span><br><span class="line"><span class="undefined">		&#125;</span></span><br><span class="line"><span class="javascript">		<span class="comment">//中序遍历</span></span></span><br><span class="line"><span class="javascript">		<span class="keyword">var</span> inOrderTraverseNode = <span class="function"><span class="keyword">function</span>(<span class="params">node, callback</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">			<span class="keyword">if</span> (node !== <span class="literal">null</span>) &#123;</span></span><br><span class="line"><span class="javascript">				<span class="comment">//先访问左子树</span></span></span><br><span class="line"><span class="undefined">				inOrderTraverseNode(node.left, callback);</span></span><br><span class="line"><span class="javascript">				<span class="comment">//把当前节点值传入回调函数,访问完左结点之后，会访问回调函数，打印左子树结点后，打印当前结点，再访问右子树</span></span></span><br><span class="line"><span class="undefined">				callback(node.key);</span></span><br><span class="line"><span class="undefined">				inOrderTraverseNode(node.right, callback)</span></span><br><span class="line"><span class="undefined">			&#125;</span></span><br><span class="line"><span class="undefined">		&#125;</span></span><br><span class="line"><span class="javascript">		<span class="comment">// callback当输出结点值的时候，把节点值传入回调函数，让回调函数决定怎么暂时输出值</span></span></span><br><span class="line"><span class="javascript">		<span class="keyword">this</span>.inOrderTraverse = <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>) </span>&#123;</span></span><br><span class="line"><span class="undefined">			inOrderTraverseNode(root, callback);</span></span><br><span class="line"><span class="undefined">		&#125;</span></span><br><span class="line"><span class="undefined">	&#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">	<span class="keyword">var</span> nodes = [<span class="number">8</span>, <span class="number">3</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">6</span>, <span class="number">14</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">13</span>];</span></span><br><span class="line"><span class="javascript">	<span class="keyword">var</span> binaryTree = <span class="keyword">new</span> BinaryTree();</span></span><br><span class="line"><span class="javascript">	nodes.map(<span class="function"><span class="params">key</span> =&gt;</span> binaryTree.insert(key));</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">	<span class="keyword">var</span> callback = <span class="function"><span class="params">key</span> =&gt;</span> <span class="built_in">console</span>.log(key);</span></span><br><span class="line"><span class="undefined">	binaryTree.inOrderTraverse(callback);</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>写作时间：<br>20180320</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+        <div class="nav-previous">
+          <a href="/nginx/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+        </div>
+      
+      
+        <div class="nav-next">
+          <a href="/tail-recursion/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>卡罗的博客 &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
