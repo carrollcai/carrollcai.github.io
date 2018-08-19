@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="carroll">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="如何发布一个npm应用？"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="卡罗的博客"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>如何发布一个npm应用？ - 卡罗的博客</title>
+
+
+  <link rel="shortcut icon" href="https://hexo.io/icon/favicon-96x96.png">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            如何发布一个npm应用？
+            
+          </h1>
+          <p class="posted-on">
+          2018-08-19
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>我们每天都需要安装各种各样的npm，那npm是如何发布到远程仓库呢？了解npm从coding，到push至npm仓库的过程，有助于我们更好的调试npm包。下面以我自己写的一个<code>json-tree-diff</code>包为例，展示一个npm包从编写到发布的过程。</p>
+<h3 id="初始化一个项目"><a href="#初始化一个项目" class="headerlink" title="初始化一个项目"></a>初始化一个项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir json-tree-diff</span><br><span class="line"><span class="built_in">cd</span> json-tree-diff</span><br></pre></td></tr></table></figure>
+<h3 id="构建一个项目"><a href="#构建一个项目" class="headerlink" title="构建一个项目"></a>构建一个项目</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init</span><br></pre></td></tr></table></figure>
+<p><strong>初始化你的npm包</strong></p>
+<ul>
+<li><p>name: 项目的名称，确保在npm包里是独一无二的。</p>
+</li>
+<li><p>version: 版本号。</p>
+</li>
+<li><p>description: 包描述。</p>
+</li>
+<li><p>entry point: 包主入口文件。</p>
+</li>
+<li><p>test command: 测试命令。一般是npm run test，上线之前确保你的包有测试用例。</p>
+</li>
+<li><p>git repository: git远程地址，随便填写一个，后期项目上传之后修改。</p>
+</li>
+<li><p>keywords: 关键词，方便npm包检索，与html中keywords有点像。</p>
+</li>
+<li><p>author: 这个不解释。</p>
+</li>
+<li><p>license: MIT或者ISC，我也不懂有什么区别，反正MIT就对了。</p>
+</li>
+</ul>
+<p>最后有一个is OK？的确认选项，回车就对了。</p>
+<h3 id="添加开源协议"><a href="#添加开源协议" class="headerlink" title="添加开源协议"></a>添加开源协议</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">The MIT License (MIT)</span><br><span class="line"></span><br><span class="line">Copyright (c) &lt;year&gt; &lt;copyright holders&gt;</span><br><span class="line"></span><br><span class="line">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</span><br><span class="line"></span><br><span class="line">The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</span><br></pre></td></tr></table></figure>
+<p>把<code>year</code>换成时间，<code>copyright holders</code>换成你的名字即可</p>
+<h3 id="添加README-md等文件"><a href="#添加README-md等文件" class="headerlink" title="添加README.md等文件"></a>添加README.md等文件</h3><p>俗话说的好，一个项目是否有人用，README.md起了很大作用。所以可以模仿知名项目的md，例如<code>create-react-app</code>，<code>React</code>等。</p>
+<p>添加一些其他的辅助文件，比如<code>.gitignore</code>，如果你引用了其他的npm包，还需要包括<code>package-lock.json</code>，<code>yarn.lock</code>，<code>eslint</code>等相关文件。</p>
+<h3 id="编写代码"><a href="#编写代码" class="headerlink" title="编写代码"></a>编写代码</h3><p>在根目录新建一个index.js文件，下面只是测试代码，没有什么实际意义，只是方便大家理解。<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">oldJson, newJson</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (oldJson === newJson) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="发布npm包"><a href="#发布npm包" class="headerlink" title="发布npm包"></a>发布npm包</h3><ol>
+<li><p>在<a href="https://www.npmjs.com" target="_blank" rel="noopener">https://www.npmjs.com</a>上注册一个账号，<strong>一定要记住自己的账号密码</strong>，我刚刚吃过亏。</p>
+</li>
+<li><p>在本地添加npm账户</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm adduser</span><br></pre></td></tr></table></figure>
+<p>填入对应<code>username</code>，<code>password</code>，<code>email</code>。</p>
+<p>这里有一个坑，如果你之前安装npm用的是淘宝的镜像，是无法登录成功的。所以需要调整会npm本身安装的地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npmjs.org/</span><br></pre></td></tr></table></figure>
+<p>我在登录过过程中，还遇到这个的报错（下面代码）。 不知道是我英文不好，还是报错提示不友好，我一直以为是哪里的配置有问题，结果我上网查了很多资料才发现，有可能是我的账号密码错误了。<a href="https://stackoverflow.com/questions/47765060/error-message-when-enabling-2-factor-authentication-for-npm" target="_blank" rel="noopener">Error message when enabling 2-factor authentication for NPM</a>，stackoverflow还是那么给力。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! code EAUTHIP</span><br><span class="line">npm ERR! Unable to authenticate, need: Basic</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>发布应用</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish --access=public</span><br></pre></td></tr></table></figure>
+<p>通过上面命令即可发布成功，前提是确保你的<strong>包名称</strong>独一无二。</p>
+<ol start="4">
+<li>测试包是否可用</li>
+</ol>
+<p><strong>不要在当前目录下安装刚上传的包</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install json-tree-diff</span><br></pre></td></tr></table></figure>
+<p>报错<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! code ENOSELF</span><br><span class="line">npm ERR! Refusing to install package with name <span class="string">"json-tree-diff"</span> under a package</span><br><span class="line">npm ERR! also called <span class="string">"json-tree-diff"</span>. Did you name your project the same</span><br><span class="line">npm ERR! as the dependency you<span class="string">'re installing?</span></span><br></pre></td></tr></table></figure></p>
+<p>用其他项目测试，你也通过<a href="https://www.npmjs.com" target="_blank" rel="noopener">https://www.npmjs.com</a>查找你的包。</p>
+<p>下图为包发到npm之后，在npm官网查询之后的结果。<br><img src="../assets/npm-release/json.jpg" alt=""></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>npm提供了一个公共的仓库容纳所有个人开发者的工具包，我们在发布自己的包之前一定要确认可用，易阅读，安全，npm前段时间刚出现安全漏洞。公共的环境每个人都有责任维护。</p>
+<p>写作时间：<br>20180819</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/sass/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>卡罗的博客 &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
