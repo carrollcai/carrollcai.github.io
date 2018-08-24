@@ -152,7 +152,7 @@
 <ul>
 <li>在服务器上用<strong>npm run dev</strong>启动项目，看有没有报错。</li>
 <li>看一下端口是否在安全组网段中，阿里云服务器有对外的网段限制。</li>
-<li>可能防火墙默认不允许外网访问自定义端口，需要手动打开：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/sbin/iptables -l INPUT -p tcp -dport `你的端口` -j ACCEPT</span><br><span class="line"></span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
+<li>可能防火墙默认不允许外网访问自定义端口，需要手动打开：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/sbin/iptables -I INPUT -p tcp --dport `你的端口` -j ACCEPT</span><br><span class="line"></span><br><span class="line">service network restart</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>服务器部署往往会有很多意想不到的问题，这是开发环境所不能预料的，这更考验你解决的能力。所以平时需要积累一些运维部署能力，其实没有也没关系，只要有一个有私人服务器的朋友。</p>
