@@ -16,7 +16,7 @@
 
   <!--Open Graph Title-->
   
-      <meta property="og:title" content="前端缓存"/>
+      <meta property="og:title" content="event loop原理"/>
   
   <!--Open Graph Description-->
   
@@ -33,7 +33,7 @@
 
   <!-- Title -->
   
-  <title>前端缓存 - 卡罗的博客</title>
+  <title>event loop原理 - 卡罗的博客</title>
 
 
   <link rel="shortcut icon" href="http://blog.caichengnan.com/assets/favicon.ico">
@@ -111,11 +111,11 @@
         <!-- Title date & tags -->
         <div class="post-header">
           <h1 class="entry-title">
-            前端缓存
+            event loop原理
             
           </h1>
           <p class="posted-on">
-          2018-09-21
+          2018-09-27
           </p>
           <div class="tags-links">
             
@@ -125,25 +125,20 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          <p>最近两周没有文章产出，有点慌，正好最近看了一篇关于前端缓存的文章，那就来好好总结一下前端缓存吧。</p>
-<p>前端缓存大致分为几类</p>
-<ol>
-<li>Service Worker(PWA专用)</li>
-<li>Memory Cache</li>
-<li>Disk Cache</li>
-<li>网络请求</li>
+          <h3 id="浏览器event-loop"><a href="#浏览器event-loop" class="headerlink" title="浏览器event loop"></a>浏览器event loop</h3><ol>
+<li>所有的同步任务都在主线程内执行，形成一个执行栈（execute stack）。</li>
+<li>所有的异步任务都在任务队列（task queue）里，一旦有了返回结果，就在任务队列里加入一个事件。</li>
+<li>执行栈中的同步任务执行完毕后，将任务队列有结果的事件加入到执行栈中，执行同步任务时有异步任务，再加入到任务队列中。</li>
+<li>主线程不断重复上面的第三步。</li>
 </ol>
-<p>缓存读取的优先级主要从上往下，</p>
-<h3 id="Service-Worker"><a href="#Service-Worker" class="headerlink" title="Service Worker"></a>Service Worker</h3><p>Service Worker是基于Web Worker的事件驱动，在浏览器后台挂起新线程，用来缓解JavaScript单线程问题。所以它有别于Memory Cache和Disk Cache，<br>Memory Cache是存在于浏览器内存中，Disk Cache是存在于电脑硬盘中，内存中的读取是快于硬盘的，而浏览器线程又是快于内存中的，所以Service Worker是优先级最高的。并且它是把控制权交给前端开发者，前端开发者可自行配置缓存规则。</p>
-<h3 id="Memory-Cache"><a href="#Memory-Cache" class="headerlink" title="Memory Cache"></a>Memory Cache</h3><p>Memory Cache的生命周期一般在浏览器tab关闭前，如果内存中的缓存溢出，浏览器也会自动清除部分内存中的缓存。几乎所有的请求资源都能进入Memory Cache。在浏览器首次加载资源，会先进行浏览器“preloader”机制，在浏览器渲染时，同时请求css、js等资源并缓存到内存中，这样就避免了，渲染时，网络请求的闲置。同时也可以在<code>Link</code>标签中设置预加载资源。<code>&lt;link rel=&quot;preload&quot;&gt;</code>。当然Memory也有一些优化策略，例如同一资源只请求一次。如果不想被内存缓存，可以在Http头部请求中设置<code>no-store</code>。</p>
-<h3 id="Disk-Cache"><a href="#Disk-Cache" class="headerlink" title="Disk Cache"></a>Disk Cache</h3><p>Disk Cache和网络请求中的缓存是我们所熟悉的，我们经常要进行一些策略对资源进行缓存，或者更新。Disk Cache是存储在硬盘上的缓存，所以它的扩展性更高，具有持久性的特点。它允许跨回话，跨站点访问。它会严格按照Http头部请求内容对资源进行“安排”。强制缓存就基于Http头部请求的内容。强制缓存通过Http Code中的<code>Expires</code>和<code>Cache-control</code>，Expires是一个时间节点，而Cache-control是一个最大有效时间，前者是基于浏览器的，容易被串改，且写法复杂，所以Cache-control的优先级高于Expires,现在更多采用Cache-control。只需在Http Code中设置。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-control: max-age: 259200</span><br></pre></td></tr></table></figure>
-<h3 id="网络请求"><a href="#网络请求" class="headerlink" title="网络请求"></a>网络请求</h3><p>顾名思义，就是发起Http网络请求。当本地的缓存失效，且Http缓存头部内容过期或失效时，就会触发这个操作。服务端会接收Last-Modified或Etag字段（Etag的优先级高于Last-Modified，Etag 主要为了解决 Last-Modified 无法解决的一些问题。），判断资源是否过期，未过期，会返回一个304 Code，并且报文体为空，这样浏览器会继续采用当前资源，反之，获取新资源返回给客户端，返回一个200 Code。这个过程被称为协商缓存。</p>
-<p>参考文章：</p>
-<ul>
-<li><a href="https://zhuanlan.zhihu.com/p/44789005" target="_blank" rel="noopener">一文读懂前端缓存</a></li>
-</ul>
-<p>写作时间：<br>20180921</p>
+<p><img src="../assets/event-loop/broswer.png" alt="../assets/event-loop/broswer.png"></p>
+<h3 id="nodejs-event-loop"><a href="#nodejs-event-loop" class="headerlink" title="nodejs event loop"></a>nodejs event loop</h3><ol>
+<li>V8引擎解析js代码。</li>
+<li>解析后的代码，调用Node API。</li>
+<li>libuv执行Node API，它将不同的任务分配给不同的线程，形成一个event loop，最终异步的将返回结果返回给V8引擎。</li>
+<li>V8引擎将结果返回给用户。</li>
+</ol>
+<p><img src="../assets/event-loop/node.png" alt="../assets/event-loop/node.png"></p>
 
         </div>
       </article>
@@ -162,13 +157,9 @@
     <!-- Pre or Next -->
     <div class="nav-links">
       
-        <div class="nav-previous">
-          <a href="/event-loop/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
-        </div>
-      
       
         <div class="nav-next">
-          <a href="/webpack4/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+          <a href="/client-cache/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
         </div>
       
     </div>
