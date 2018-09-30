@@ -152,7 +152,9 @@
 <p>停止zookeeper<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/zkServer.sh stop</span><br></pre></td></tr></table></figure></p>
 <p>前台式启动zookeeper</p>
 <p><code>./zkServer.sh start</code>是后台式启动，不会有日志信息输入，而下面的方式可以输出日志。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zkServer.sh start-foreground</span><br></pre></td></tr></table></figure></p>
-<h3 id="通过IDEA下载项目"><a href="#通过IDEA下载项目" class="headerlink" title="通过IDEA下载项目"></a>通过IDEA下载项目</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">打开IDEA，File -&gt; NEW -&gt; Project from Version Control -&gt; Git。</span><br><span class="line"></span><br><span class="line">输入URL: **http://caicn@10.11.20.6/migu/sales.git**，其中caicn为Git用户名地址，选择对应Directory，然后克隆。</span><br><span class="line"></span><br><span class="line">克隆下来的项目默认应该是dev分支，如果是master分支，通过右下角Git的操作区，切换到dev分支。</span><br></pre></td></tr></table></figure>
+<h3 id="通过IDEA下载项目"><a href="#通过IDEA下载项目" class="headerlink" title="通过IDEA下载项目"></a>通过IDEA下载项目</h3><p>打开IDEA，File -&gt; NEW -&gt; Project from Version Control -&gt; Git。</p>
+<p>输入URL：<a href="http://caicn@10.11.20.6/migu/sales.git" target="_blank" rel="noopener">http://caicn@10.11.20.6/migu/sales.git</a>，其中caicn为Git用户名地址，选择对应Directory，然后克隆。</p>
+<p>克隆下来的项目默认应该是dev分支，如果是master分支，通过右下角Git的操作区，切换到dev分支。</p>
 <h3 id="配置JDK"><a href="#配置JDK" class="headerlink" title="配置JDK"></a>配置JDK</h3><p>File -&gt; Project Structure，左边区域选中project，将默认选项改为安装的JDK。</p>
 <p><img src="../assets/esop-end/jdk.jpg" alt="../assets/esop-end/jdk.jpg">。</p>
 <h3 id="配置Maven"><a href="#配置Maven" class="headerlink" title="配置Maven"></a>配置Maven</h3><p>IntelliJ IDEA -&gt; Perferences，左边区域搜索<code>maven</code>，如下图，<code>Local repository</code>最好由同事拷贝给你。</p>
