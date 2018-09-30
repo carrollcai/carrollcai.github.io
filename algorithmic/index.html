@@ -16,7 +16,7 @@
 
   <!--Open Graph Title-->
   
-      <meta property="og:title" content="event loop原理"/>
+      <meta property="og:title" content="数据结构与算法之美"/>
   
   <!--Open Graph Description-->
   
@@ -33,7 +33,7 @@
 
   <!-- Title -->
   
-  <title>event loop原理 - 卡罗的博客</title>
+  <title>数据结构与算法之美 - 卡罗的博客</title>
 
 
   <link rel="shortcut icon" href="http://blog.caichengnan.com/assets/favicon.ico">
@@ -111,11 +111,11 @@
         <!-- Title date & tags -->
         <div class="post-header">
           <h1 class="entry-title">
-            event loop原理
+            数据结构与算法之美
             
           </h1>
           <p class="posted-on">
-          2018-09-27
+          2018-09-29
           </p>
           <div class="tags-links">
             
@@ -125,20 +125,7 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          <h3 id="浏览器event-loop"><a href="#浏览器event-loop" class="headerlink" title="浏览器event loop"></a>浏览器event loop</h3><ol>
-<li>所有的同步任务都在主线程内执行，形成一个执行栈（execute stack）。</li>
-<li>所有的异步任务都在任务队列（task queue）里，一旦有了返回结果，就在任务队列里加入一个事件。</li>
-<li>执行栈中的同步任务执行完毕后，将任务队列有结果的事件加入到执行栈中，执行同步任务时有异步任务，再加入到任务队列中。</li>
-<li>主线程不断重复上面的第三步。</li>
-</ol>
-<p><img src="../assets/event-loop/broswer.png" alt="../assets/event-loop/broswer.png"></p>
-<h3 id="nodejs-event-loop"><a href="#nodejs-event-loop" class="headerlink" title="nodejs event loop"></a>nodejs event loop</h3><ol>
-<li>V8引擎解析js代码。</li>
-<li>解析后的代码，调用Node API。</li>
-<li>libuv执行Node API，它将不同的任务分配给不同的线程，形成一个event loop，最终异步的将返回结果返回给V8引擎。</li>
-<li>V8引擎将结果返回给用户。</li>
-</ol>
-<p><img src="../assets/event-loop/node.png" alt="../assets/event-loop/node.png"></p>
+          <p>最近在极客App上学习王争老师的课程，《数据结构与算法之美》，记录一下学习内容。之前很多高大上的内容，大O时间复杂度，空间复杂度，最大期望值算法，最好、最坏、平均、均摊时间复杂度也被拨开云雾，其实都是些很简单的知识点。</p>
 
         </div>
       </article>
@@ -158,12 +145,12 @@
     <div class="nav-links">
       
         <div class="nav-previous">
-          <a href="/algorithmic/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+          <a href="/esop-end/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
         </div>
       
       
         <div class="nav-next">
-          <a href="/client-cache/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+          <a href="/event-loop/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
         </div>
       
     </div>
