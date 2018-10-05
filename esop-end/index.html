@@ -126,11 +126,11 @@
         <!-- Post Main Content -->
         <div class="entry-content">
           <p>销售管理系统（Esop）是以zookeeper为注册中心，dubbo为RPC通信框架，语言层面使用的Spring框架。通过maven管理架包。编辑器为IntelliJ IDEA。</p>
-<h3 id="搭建java环境"><a href="#搭建java环境" class="headerlink" title="搭建java环境"></a>搭建java环境</h3><p>window环境下，参考这个链接，<a href="http://www.runoob.com/java/java-environment-setup.html" target="_blank" rel="noopener">Java 开发环境配置</a></p>
+<h3 id="搭建java环境"><a href="#搭建java环境" class="headerlink" title="搭建java环境"></a>搭建java环境</h3><p>window环境下，参考这个链接，<a href="http://www.runoob.com/java/java-environment-setup.html" target="_blank" rel="noopener">Java 开发环境配置</a>，<strong>JDK必须下载1.8版本</strong></p>
 <h3 id="安装maven"><a href="#安装maven" class="headerlink" title="安装maven"></a>安装maven</h3><h4 id="mac版本"><a href="#mac版本" class="headerlink" title="mac版本"></a>mac版本</h4><ol>
 <li>下载安装包</li>
 </ol>
-<p>从官网下载，<a href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener">https://maven.apache.org/download.cgi</a></p>
+<p>从官网下载，<a href="https://maven.apache.org/download.cgi" target="_blank" rel="noopener">https://maven.apache.org/download.cgi</a>，<strong>Maven必须下载3.0.5版本</strong></p>
 <ol start="2">
 <li>配置 Maven 环境变量</li>
 </ol>
@@ -152,8 +152,11 @@
 <p>停止zookeeper<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/zkServer.sh stop</span><br></pre></td></tr></table></figure></p>
 <p>前台式启动zookeeper</p>
 <p><code>./zkServer.sh start</code>是后台式启动，不会有日志信息输入，而下面的方式可以输出日志。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zkServer.sh start-foreground</span><br></pre></td></tr></table></figure></p>
-<h3 id="通过IDEA下载项目"><a href="#通过IDEA下载项目" class="headerlink" title="通过IDEA下载项目"></a>通过IDEA下载项目</h3><p>打开IDEA，File -&gt; NEW -&gt; Project from Version Control -&gt; Git。</p>
-<p>输入URL：<a href="http://caicn@10.11.20.6/migu/sales.git" target="_blank" rel="noopener">http://caicn@10.11.20.6/migu/sales.git</a>，其中caicn为Git用户名地址，选择对应Directory，然后克隆。</p>
+<h3 id="通过IDEA下载项目"><a href="#通过IDEA下载项目" class="headerlink" title="通过IDEA下载项目"></a>通过IDEA下载项目</h3><blockquote>
+<p>IDEA破解教程，<a href="https://www.jianshu.com/p/3c87487e7121" target="_blank" rel="noopener">IntelliJ IDEA 2018 破解过程<a href="Mac OS &amp; Windows">详细步骤</a></a></p>
+</blockquote>
+<p>打开IDEA，File -&gt; NEW -&gt; Project from Version Control -&gt; Git。</p>
+<p>输入URL：<a href="http://caicn@xxx/migu/sales.git" target="_blank" rel="noopener">http://caicn@xxx/migu/sales.git</a>，其中caicn为Git用户名地址，选择对应Directory，然后克隆。xxx为Gitlab IP地址。</p>
 <p>克隆下来的项目默认应该是dev分支，如果是master分支，通过右下角Git的操作区，切换到dev分支。</p>
 <h3 id="配置JDK"><a href="#配置JDK" class="headerlink" title="配置JDK"></a>配置JDK</h3><p>File -&gt; Project Structure，左边区域选中project，将默认选项改为安装的JDK。</p>
 <p><img src="../assets/esop-end/jdk.jpg" alt="../assets/esop-end/jdk.jpg">。</p>
@@ -168,6 +171,10 @@
 <p><img src="../assets/esop-end/web.jpg" alt="../assets/esop-end/web.jpg"></p>
 <h3 id="测试是否全部启动成功"><a href="#测试是否全部启动成功" class="headerlink" title="测试是否全部启动成功"></a>测试是否全部启动成功</h3><p>打开浏览器，访问localhost:8081</p>
 <p><img src="../assets/esop-end/localhost.jpg" alt="../assets/esop-end/localhost.jpg"></p>
+<h3 id="可能出现问题"><a href="#可能出现问题" class="headerlink" title="可能出现问题"></a>可能出现问题</h3><p>1.was cached in the local repository, resolution will not be reattempted until the update interval of nexus has elapsed or updates are forced -&gt; [Help 1]</p>
+<p>解决地址，<a href="https://blog.csdn.net/kongxx/article/details/45362559" target="_blank" rel="noopener">Maven was cached in the local repository, resolution will not be reattempted until the update interv</a></p>
+<p>2.Maven必须用3.0.5的版本，用高版本不兼容，<a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a>。</p>
+<p>3.JDK也必须是1.8的版本。</p>
 <p>写作时间：<br>20180930</p>
 
         </div>
