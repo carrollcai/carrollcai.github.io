@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="carroll">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="卡罗的博客"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="卡罗的博客"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="website" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>卡罗的博客</title>
+
+
+  <link rel="shortcut icon" href="http://blog.caichengnan.com/assets/favicon.ico">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            Untitled
+            
+          </h1>
+          <p class="posted-on">
+          2018-10-09
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h3 id="Vue构造函数"><a href="#Vue构造函数" class="headerlink" title="Vue构造函数"></a>Vue构造函数</h3><p>1.先构造Vue构造函数，然后初始化原型上的属性，分别调用initMixin、stateMixin、eventsMixin、lifycycleMixin、renderMixin。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Vue</span>(<span class="params">options</span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 前面内容省略 ...</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">this</span>._init(options)</span><br><span class="line">&#125;</span><br><span class="line">initMixin(Vue)</span><br><span class="line">stateMixin(Vue)</span><br><span class="line">eventsMixin(Vue)</span><br><span class="line">lifecycleMixin(Vue)</span><br><span class="line">renderMixin(Vue)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Vue</span><br></pre></td></tr></table></figure>
+<p>2.然后再core.js文件里，调用initGlobalAPI，挂载全局的静态方法和属性。</p>
+<p>3.实例化Vue时，</p>
+<pre><code>1) 会调用this._init()方法，这个来自于initMixin。
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initMixin</span>(<span class="params">Vue: Class&lt;Component&gt;</span>) </span>&#123;</span><br><span class="line">    Vue.prototype._init = <span class="function"><span class="keyword">function</span> (<span class="params">options?: Object</span>) </span>&#123;</span><br><span class="line">        vm._uid = uid++</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">          initProxy(vm)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          vm._renderProxy = vm</span><br><span class="line">        &#125;</span><br><span class="line">            </span><br><span class="line">        vm._self = vm</span><br><span class="line">        initLifecycle(vm)</span><br><span class="line">        initEvents(vm)</span><br><span class="line">        initRender(vm)</span><br><span class="line">        callHook(vm, <span class="string">'beforeCreate'</span>)</span><br><span class="line">        initInjections(vm) <span class="comment">// resolve injections before data/props</span></span><br><span class="line">        initState(vm)</span><br><span class="line">        initProvide(vm) <span class="comment">// resolve provide after data/props</span></span><br><span class="line">        callHook(vm, <span class="string">'created'</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (vm.$options.el) &#123;</span><br><span class="line">          vm.$mount(vm.$options.el)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+2) 首先每个组件都有一个自增`uid`
+3) 赋值_isVue为true,表示它是vue实例。
+4) 同时会把实例上的方法和属性都挂载到vm.$options上，供程序内部和使用者调用。
+5) 调用initProxy，把代理的属性赋值到wm._renderProxy上，使用属性时，可判断属性是否存在实例vm上。
+6) 然后调用一系列初始化操作，包括生命周期初始化，其中initState在callhook(vm, &apos;brforeCreate&apos;)和callhook(vm. &apos;created&apos;)之间，是初始化props、data、computed的操作，这其中最终也会调用watch，添加响应式依赖。
+7) 如果存在vm.$options.el元素，则调用vm.$mount渲染虚拟Dom。最终会调用到mountComponent函数（在core/instance/lifecycle.js），先调用callhook(vm, &apos;beforeMount&apos;)，然后调用updateComponent，如下，最终会调用_update方法，渲染_render里的渲染函数。
+同时，如果实例已经渲染过了，会callhook(vm, &apos;beforeUpdate&apos;)，最终判断实例上的$vnode是否已经清空，清空的话，表示已经渲染完成，调用callhook(vm, &apos;mounted&apos;)，表示完成渲染。
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">updateComponent = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  vm._update(vm._render(), hydrating)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</code></pre><p>4.其中mount过程可以分解，compile -&gt; render -&gt; vnode -&gt; patch -&gt; Dom.分别是解析模板，触发render渲染函数，创建（修改）vnode，把变更的补丁加到虚拟Dom上，最终一次性生成Dom。渲染过程如下图。当然，vnode和patch过程就牵扯出virtual dom，这个内容就比较多，这里不多阐述。</p>
+<p><img src="../assets/vue/new-vue.png" alt=""></p>
+<h3 id="观察者Watcher构造函数"><a href="#观察者Watcher构造函数" class="headerlink" title="观察者Watcher构造函数"></a>观察者Watcher构造函数</h3><blockquote>
+<p>Watcher的原理就是通过对“被观察者”的求值，触发该值的get拦截器函数，从而收集依赖（Vue中有缓存对比机制，对比是否重复收集了依赖）。</p>
+</blockquote>
+<p>Watcher构造函数在src/core/observer/watcher.js中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">export default class Watcher &#123;</span><br><span class="line">    constructor(</span><br><span class="line">        vm: Component,</span><br><span class="line">        expOrFn: string | Function,</span><br><span class="line">        cb: Function.</span><br><span class="line">        options?: ? Object,</span><br><span class="line">        isRenderWatcher?: Boolean</span><br><span class="line">    ) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>共有三个地方调用到new Watcher</strong></p>
+<p>1.在core/instance/lifecycle.js，在mountComponent函数中创建渲染函数观察者实例</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Watcher(vm, updateComponent, noop, &#123;</span><br><span class="line">    before() &#123;</span><br><span class="line">        <span class="keyword">if</span> (vm._isMounted) &#123;</span><br><span class="line">            callhook(vm, <span class="string">'beforeUpdate'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>2.在core/instance/state.js中，在initComputed函数内，所以computed是一种计算属性的观察者对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// create internal watcher for the computed property.</span><br><span class="line">  watchers[key] = new Watcher(</span><br><span class="line">    vm,</span><br><span class="line">    getter || noop,</span><br><span class="line">    noop,</span><br><span class="line">    computedWatcherOptions</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
+<p>3.也在core/instance/state.js中,组件中的watch求值和调用this.$watch，本质上都是添加观察者实例，触发该值的get拦截器方法，实现依赖</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Vue.prototype.$watch = <span class="function"><span class="keyword">function</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">    expOrFn: string | Function,</span></span></span><br><span class="line"><span class="function"><span class="params">    cb: any,</span></span></span><br><span class="line"><span class="function"><span class="params">    options?: Object</span></span></span><br><span class="line"><span class="function"><span class="params"></span>) : <span class="title">Function</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> watcher = <span class="keyword">new</span> Watcher(vm, expOrFn, cb, options)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>================</p>
+<p>写作时间：20181009</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/esop-end/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>卡罗的博客 &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
