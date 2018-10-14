@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="carroll">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="JS中的原型链与继承"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="卡罗的博客"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>JS中的原型链与继承 - 卡罗的博客</title>
+
+
+  <link rel="shortcut icon" href="http://blog.caichengnan.com/assets/favicon.ico">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="/archives">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            JS中的原型链与继承
+            
+          </h1>
+          <p class="posted-on">
+          2018-10-14
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <p>在JS中，每个对象都有一个私有属性([[prototype]]，这个在一般浏览器中的实现是<strong>proto</strong>)，指向它的原型对象prototype，该原型对象上也有一个自己的原型对象，层层向上，直到一个对象的原型为null。null没有原型，作为原型链的最后一个环节。</p>
+<h3 id="继承属性"><a href="#继承属性" class="headerlink" title="继承属性"></a>继承属性</h3><p>当试图访问一个JS对象的属性，它不仅仅在该对象上搜寻，还会搜寻该对象的原型，以及该对象的原型的原型，层层查找，直到名字匹配或者到达原型链的顶部。</p>
+<p>ES6中，通过Object.getPrototypeOf()与Object.setPrototypeOf()访问器来访问。等于JS非标准但是浏览器实现的<strong>proto</strong>属性。<strong>proto</strong>和func的prototype是不一样的。被构造函数创建的实例的<strong>proto</strong>指向func的原型prototype属性。</p>
+<h3 id="创建对象和生成原型链"><a href="#创建对象和生成原型链" class="headerlink" title="创建对象和生成原型链"></a>创建对象和生成原型链</h3><p>1.语法结构创建的对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;<span class="attr">a</span>: <span class="number">1</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// o -&gt; Object.prototype -&gt; null;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> o1 = [<span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// o1 -&gt; Array.prototype -&gt; Object.prototype -&gt; null</span></span><br></pre></td></tr></table></figure>
+<p>2.构造器创建的对象</p>
+<blockquote>
+<p>在JS中，构造器就是一个普通的函数。当你使用new操作符来作用这个函数的时，它就被称作构造函数（构造方法）。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Graph</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.vertices = [];</span><br><span class="line">    <span class="keyword">this</span>.edges = [];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Graph.prototype = &#123;</span><br><span class="line">    addVertex: <span class="function"><span class="keyword">function</span>(<span class="params">v</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.vertices.push(v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> g = <span class="keyword">new</span> Graph();</span><br><span class="line"></span><br><span class="line"><span class="comment">// g在实例化之后，__proto__指向Graph.prototype</span></span><br></pre></td></tr></table></figure>
+<p>3.Object.create创建对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> b = <span class="built_in">Object</span>.create(a);</span><br><span class="line"></span><br><span class="line"><span class="comment">// b -&gt; a -&gt; Object.prototype -&gt; null;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> c = <span class="built_in">Object</span>.create(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// c -&gt; null;</span></span><br><span class="line"><span class="built_in">console</span>.log(c.hasOwnProperty); <span class="comment">// undefined,因为c没有继承Object.prototype，所以没有继承hasOwnProperty方法。</span></span><br></pre></td></tr></table></figure>
+<p>4.class关键字创建对象</p>
+<blockquote>
+<p>es6通过class关键字创建对象，但它仍然是基于原型的。这些新的关键字包括,class、constructor、static、extends、super</p>
+</blockquote>
+<blockquote>
+<p>super字段用于调用父类上的函数。</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">super</span>([<span class="built_in">arguments</span>]);</span><br><span class="line"><span class="comment">// 调用父类上的构造函数，只有实现了调用构造函数，才能调用父类上的方法。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">super</span>.functionOnParent([<span class="built_in">arguments</span>]);</span><br><span class="line"><span class="comment">// 调用父类上的方法。</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Polygen</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(width, height) &#123;</span><br><span class="line">        <span class="keyword">this</span>.width = width;</span><br><span class="line">        <span class="keyword">this</span>.height = height;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span> <span class="keyword">extends</span> <span class="title">Polygen</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>(sideLength) &#123;</span><br><span class="line">        <span class="comment">// 调用父类构造函数，并传入父类构造函数所需的width,height</span></span><br><span class="line">        <span class="keyword">super</span>(sideLength, sideLength);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 计算面积</span></span><br><span class="line">    get area() &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">this</span>.height * <span class="keyword">this</span>.width; </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 暴露外部，修改sideLength，即修改了正方形的边长</span></span><br><span class="line">    set sideLength(newLength) &#123;</span><br><span class="line">        <span class="keyword">this</span>.width = newLength;</span><br><span class="line">        <span class="keyword">this</span>.height = newLength;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> square = <span class="keyword">new</span> Square(<span class="number">2</span>);</span><br><span class="line"><span class="built_in">console</span>.log(square);</span><br><span class="line"><span class="comment">// Square &#123;width: 2, height: 2&#125;。是Square的实例，__proto__指向Polygen。</span></span><br><span class="line"></span><br><span class="line">square.sideLength = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(square);</span><br><span class="line"><span class="comment">// Square &#123;width: 3, height: 3&#125;。</span></span><br></pre></td></tr></table></figure>
+<h3 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h3><p>当试图寻找一个不存在的属性时，会遍历整个原型链，所以如果你查找属性的时候，确定对象是查找自己的属性，而不是原型链上的，可以通过name.hasOwnProperty(‘o’);</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>在编写使用它的复杂代码之前，理解原型继承模型是至关重要的。此外，请注意代码中原型链的长度，并在必要时将其分解，以避免可能的性能问题。此外，原生原型不应该被扩展，除非它是为了与新的JavaScript特性兼容。</p>
+<p>参考文章，<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain" target="_blank" rel="noopener">继承与原型链
+</a></p>
+<p>==================</p>
+<p>写作时间：20181014</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/vue/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>卡罗的博客 &copy; 2018</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
