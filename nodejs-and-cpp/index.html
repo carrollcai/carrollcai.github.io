@@ -131,7 +131,7 @@
 <p>2）如何在Nodejs中加入C++扩展模块，无论现有的C++库，还是自己封装的C++库。</p>
 <p>3）Chrome V8基础的介绍，此前我对于Chrome V8的印象是，应该很牛逼，毕竟汽车里的V8发动机，有8个缸。这一章内容比较多，估计读者是为了照顾部分像我一样的前端工作者，从这几个方面讲解。</p>
 <p>  一、基础概念，内存管理，隔离实例（Isolate），上下文（Context），脚本（Script）。内存管理主要是新生代内存管理和老生代内存管理，新生代采用Scanvenge算法，老生代采用标记清除（Mark-Sweep），标记整理（Mark-compact），惰性清理。隔离实例实际上全称是Isolate Instance，是一个V8引擎的实例，但是实例之间互不干扰。上下文就是平时我们JS中执行环境的上下问。脚本即运行编译好的JS脚本，前端用不到。<br>  二、句柄（Handle），V8中优化垃圾回收机制（GC）的一个东西，有好几种句柄类型，分别对应不同的生命周期。与指针不同，是V8中实现的在堆内存中JS对象的一个引用。<br>  三、模板，基于C++中Template类，继承实现了函数模板（Function Template），对象模板（Object Template），即我们平时使用的Object类和Function类都出于此。<br>  四、常用数据类型，基本上是V8对JS中常用对象的封装。<br>  五、异常机制，try-catch，try-catch是C++一个异常类的封装，在其中也学到了JS中除了有Error抛出异常外，还有数据范围错误（RangeError），引用错误（ReferenceError），语法错误（SyntaxError）。</p>
-<p>4）libuv，Nodejs中底层事件循环（event loop），用的就是这个东西，它是扩平台的，支持Unix，Linux，Windows。虽然Nodejs是单线程的（不开启多线程模式），但是底层的libuv是多线程模式，以非阻塞的方式执行Nodejs任务。本质还是通过轮询等方式询问执行结果。</p>
+<p>4）libuv，Nodejs中底层事件循环（event loop），用的就是这个东西，它是跨平台的，支持Unix，Linux，Windows。虽然Nodejs是单线程的（不开启多线程模式），但是底层的libuv是多线程模式，以非阻塞的方式执行Nodejs任务。本质还是通过轮询等方式询问执行结果。</p>
 <p>其他我也不多介绍了，毕竟水平有限，即将我期间补充了一些C++的基础知识，但是看到成堆的C++代码，还是感到头疼。不过至少有一半的内容纯前端还是能理解。如果你想要了Chrome V8或者是Nodejs底层原理，这本书是一本不错的推荐。</p>
 <p>结束语，如文章有错误，麻烦及时通知我，此文仅为我个人看法。</p>
 <p><img src="../assets/node-and-cpp/book1.jpg" alt="../assets/node-and-cpp/book1.jpg"></p>
