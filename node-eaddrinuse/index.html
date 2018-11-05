@@ -16,7 +16,7 @@
 
   <!--Open Graph Title-->
   
-      <meta property="og:title" content="《Node.js来一打c++扩展》书评"/>
+      <meta property="og:title" content="卡罗的博客"/>
   
   <!--Open Graph Description-->
   
@@ -24,7 +24,7 @@
   <meta property="og:site_name" content="卡罗的博客"/>
   <!--Type page-->
   
-      <meta property="og:type" content="article" />
+      <meta property="og:type" content="website" />
   
   <!--Page Cover-->
   
@@ -33,7 +33,7 @@
 
   <!-- Title -->
   
-  <title>《Node.js来一打c++扩展》书评 - 卡罗的博客</title>
+  <title>卡罗的博客</title>
 
 
   <link rel="shortcut icon" href="http://blog.caichengnan.com/assets/favicon.ico">
@@ -111,11 +111,11 @@
         <!-- Title date & tags -->
         <div class="post-header">
           <h1 class="entry-title">
-            《Node.js来一打c++扩展》书评
+            Untitled
             
           </h1>
           <p class="posted-on">
-          2018-10-28
+          2018-11-05
           </p>
           <div class="tags-links">
             
@@ -125,18 +125,28 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          <p>刚读完这本书，有几章没读，4 C++扩展实战初探，5 Node.js原生抽象————NAN，7 实战————文件监视器，9 N-API————下一代Node.js C++扩展开发方式。别问我为什么没有读这几章，没有C++基础，读了也基本理解不了什么。</p>
-<p>下面讲讲这本书的优点吧，</p>
-<p>1）对Nodejs包管理的介绍，主要介绍Common.js的，模块管理。</p>
-<p>2）如何在Nodejs中加入C++扩展模块，无论现有的C++库，还是自己封装的C++库。</p>
-<p>3）Chrome V8基础的介绍，此前我对于Chrome V8的印象是，应该很牛逼，毕竟汽车里的V8发动机，有8个缸。这一章内容比较多，估计读者是为了照顾部分像我一样的前端工作者，从这几个方面讲解。</p>
-<p>  一、基础概念，内存管理，隔离实例（Isolate），上下文（Context），脚本（Script）。内存管理主要是新生代内存管理和老生代内存管理，新生代采用Scanvenge算法，老生代采用标记清除（Mark-Sweep），标记整理（Mark-compact），惰性清理。隔离实例实际上全称是Isolate Instance，是一个V8引擎的实例，但是实例之间互不干扰。上下文就是平时我们JS中执行环境的上下问。脚本即运行编译好的JS脚本，前端用不到。<br>  二、句柄（Handle），V8中优化垃圾回收机制（GC）的一个东西，有好几种句柄类型，分别对应不同的生命周期。与指针不同，是V8中实现的在堆内存中JS对象的一个引用。<br>  三、模板，基于C++中Template类，继承实现了函数模板（Function Template），对象模板（Object Template），即我们平时使用的Object类和Function类都出于此。<br>  四、常用数据类型，基本上是V8对JS中常用对象的封装。<br>  五、异常机制，try-catch，try-catch是C++一个异常类的封装，在其中也学到了JS中除了有Error抛出异常外，还有数据范围错误（RangeError），引用错误（ReferenceError），语法错误（SyntaxError）。</p>
-<p>4）libuv，Nodejs中底层事件循环（event loop），用的就是这个东西，它是跨平台的，支持Unix，Linux，Windows。虽然Nodejs是单线程的（不开启多线程模式），但是底层的libuv是多线程模式，以非阻塞的方式执行Nodejs任务。本质还是通过轮询等方式询问执行结果。</p>
-<p>其他我也不多介绍了，毕竟水平有限，即将我期间补充了一些C++的基础知识，但是看到成堆的C++代码，还是感到头疼。不过至少有一半的内容纯前端还是能理解。如果你想要了Chrome V8或者是Nodejs底层原理，这本书是一本不错的推荐。</p>
-<p>结束语，如文章有错误，麻烦及时通知我，此文仅为我个人看法。</p>
-<p><img src="../assets/node-and-cpp/book1.jpg" alt="../assets/node-and-cpp/book1.jpg"></p>
-<p>================</p>
-<p>写作时间：20181028</p>
+          <p>###<br>title: node端口被占用引发的文件写入错误</p>
+<p>###</p>
+<p>本文用来记录，node端口被占用引发的文件写入内容为空的问题。</p>
+<p>之前写了一个支持单活动开发的webpack项目，可通过传入不同的参数，指定不同的活动server，操作如下。<code>npm run init</code>，只是一个初始化操作，主要用于文件的复制。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eventName=&quot;2018event&quot; npm run init</span><br></pre></td></tr></table></figure>
+<p>当用户初始化这个命令之后，就会在本地的json文件里写入变量，最终varible.json里回写入活动信息，下次再操作npm的命令，就不需要再次输入<code>eventName</code>，而是从本地文件里读取变量。</p>
+<p>varible.json文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;eventName&quot;:&quot;2018event&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p>当启动webpack-dev-server时，直接用<code>npm run start</code>，即可打开新建活动的server。</p>
+<p>但是出现了一个问题，如果你之前已经启动了一个活动的server，再次调用<code>npm run start</code>，会报端口冲突。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10% building modules 1/1 modules 0 activeevents.js:167</span><br><span class="line">throw er; // Unhandled &apos;error&apos; event</span><br><span class="line">Error: listen EADDRINUSE 0.0.0.0:9000</span><br></pre></td></tr></table></figure>
+<p>但是我这里有一个文件写入的操作，如果端口冲突，，文件的内容会变成空。那么<code>varible.json</code>里的内容就会变成空，如果读取一个空的json文件，系统会抛错。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (process.env.NAME) &#123;</span><br><span class="line">  <span class="keyword">let</span> json = &#123;</span><br><span class="line">      eventName: process.env.NAME</span><br><span class="line">    &#125;</span><br><span class="line">  fs.writeFile(path.join(__dirname, <span class="string">'./variable.json'</span>), <span class="built_in">JSON</span>.stringify(json), <span class="function"><span class="keyword">function</span> (<span class="params">err</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      <span class="built_in">console</span>.error(err);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'----------新增成功-------------'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>错误原因：</p>
+<p>当文件写入为异步操作时，node发生未处理的错误（比如端口冲突），有可能文件写入的内容为空。</p>
+<p>解决方法：</p>
+<ol>
+<li>采用同步的方法文件写入内容（fs.writeFileSync）。</li>
+<li>捕捉端口错误，新增一个端口。</li>
+</ol>
+<p>=================</p>
+<p>写作时间：20181105</p>
 
         </div>
       </article>
@@ -155,13 +165,9 @@
     <!-- Pre or Next -->
     <div class="nav-links">
       
-        <div class="nav-previous">
-          <a href="/node-eaddrinuse/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
-        </div>
-      
       
         <div class="nav-next">
-          <a href="/algorithm-start/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+          <a href="/nodejs-and-cpp/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
         </div>
       
     </div>
