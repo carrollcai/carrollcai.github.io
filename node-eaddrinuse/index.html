@@ -16,7 +16,7 @@
 
   <!--Open Graph Title-->
   
-      <meta property="og:title" content="卡罗的博客"/>
+      <meta property="og:title" content="node端口被占用引发的文件写入错误"/>
   
   <!--Open Graph Description-->
   
@@ -24,7 +24,7 @@
   <meta property="og:site_name" content="卡罗的博客"/>
   <!--Type page-->
   
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content="article" />
   
   <!--Page Cover-->
   
@@ -33,7 +33,7 @@
 
   <!-- Title -->
   
-  <title>卡罗的博客</title>
+  <title>node端口被占用引发的文件写入错误 - 卡罗的博客</title>
 
 
   <link rel="shortcut icon" href="http://blog.caichengnan.com/assets/favicon.ico">
@@ -111,7 +111,7 @@
         <!-- Title date & tags -->
         <div class="post-header">
           <h1 class="entry-title">
-            Untitled
+            node端口被占用引发的文件写入错误
             
           </h1>
           <p class="posted-on">
@@ -125,9 +125,7 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          <p>###<br>title: node端口被占用引发的文件写入错误</p>
-<p>###</p>
-<p>本文用来记录，node端口被占用引发的文件写入内容为空的问题。</p>
+          <p>本文用来记录，node端口被占用引发的文件写入内容为空的问题。</p>
 <p>之前写了一个支持单活动开发的webpack项目，可通过传入不同的参数，指定不同的活动server，操作如下。<code>npm run init</code>，只是一个初始化操作，主要用于文件的复制。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eventName=&quot;2018event&quot; npm run init</span><br></pre></td></tr></table></figure>
 <p>当用户初始化这个命令之后，就会在本地的json文件里写入变量，最终varible.json里回写入活动信息，下次再操作npm的命令，就不需要再次输入<code>eventName</code>，而是从本地文件里读取变量。</p>
