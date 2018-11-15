@@ -125,9 +125,9 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          <p>在JS中，每个对象都有一个私有属性([[prototype]]，这个在一般浏览器中的实现是<strong>proto</strong>)，指向它的原型对象prototype，该原型对象上也有一个自己的原型对象，层层向上，直到一个对象的原型为null。null没有原型，作为原型链的最后一个环节。</p>
+          <p>在JS中，每个对象都有一个私有属性([[prototype]]，这个在一般浏览器中的实现是__proto__)，指向它的原型对象prototype，该原型对象上也有一个自己的原型对象，层层向上，直到一个对象的原型为null。null没有原型，作为原型链的最后一个环节。</p>
 <h3 id="继承属性"><a href="#继承属性" class="headerlink" title="继承属性"></a>继承属性</h3><p>当试图访问一个JS对象的属性，它不仅仅在该对象上搜寻，还会搜寻该对象的原型，以及该对象的原型的原型，层层查找，直到名字匹配或者到达原型链的顶部。</p>
-<p>ES6中，通过Object.getPrototypeOf()与Object.setPrototypeOf()访问器来访问。等于JS非标准但是浏览器实现的<strong>proto</strong>属性。<strong>proto</strong>和func的prototype是不一样的。被构造函数创建的实例的<strong>proto</strong>指向func的原型prototype属性。</p>
+<p>ES6中，通过Object.getPrototypeOf()与Object.setPrototypeOf()访问器来访问。等于JS非标准但是浏览器实现的__proto__属性。__proto__和func的prototype是不一样的。被构造函数创建的实例的__proto__指向func的原型prototype属性。</p>
 <h3 id="创建对象和生成原型链"><a href="#创建对象和生成原型链" class="headerlink" title="创建对象和生成原型链"></a>创建对象和生成原型链</h3><p>1.语法结构创建的对象</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;<span class="attr">a</span>: <span class="number">1</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// o -&gt; Object.prototype -&gt; null;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> o1 = [<span class="number">1</span>, <span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// o1 -&gt; Array.prototype -&gt; Object.prototype -&gt; null</span></span><br></pre></td></tr></table></figure>
 <p>2.构造器创建的对象</p>
