@@ -125,7 +125,32 @@
         </div>
         <!-- Post Main Content -->
         <div class="entry-content">
-          
+          <h3 id="需求导向"><a href="#需求导向" class="headerlink" title="需求导向"></a>需求导向</h3><p>作为一个前端，肯定遇到过这个需求，UI做出来的设计稿利用了特殊字体。虽然对于前端来说，管你什么字体，我微软雅黑通吃，但是有时候UI会很执着，“这个一定要实现，你直接切一张图片上去也行”。为了省事，我们肯定是直接切一张图上去啊，但是每次切完图之后，图片都需要加工优化。每次替换文字都要重新编辑psd图 -&gt; 切图 -&gt; 优化图片。所以还原高保真的时候要遵循一个原则，能用html实现的就不要用图片代替，美言之为了性能，其实还是为了无止境的需求的修改。</p>
+<p>我们知道使用特殊字体，只要引入字体的ttf文件（ttf文件，这里不做介绍，可自行百度）就行。如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@<span class="keyword">font-face</span> &#123;</span><br><span class="line">  <span class="attribute">font-family</span>: <span class="string">"fashion"</span>;</span><br><span class="line">  <span class="attribute">src</span>: <span class="built_in">url</span>(<span class="string">'./fashion.ttf'</span>) <span class="built_in">format</span>(<span class="string">'truetype'</span>);</span><br><span class="line">  <span class="attribute">font-weight</span>: normal;</span><br><span class="line">  <span class="attribute">font-style</span>: normal;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.fashion-font</span> &#123;</span><br><span class="line">  <span class="attribute">font-family</span>: <span class="string">"fashion"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是字体文件一般包含所有字体，字体文件大小几M，对于前端来说，肯定是不能接受的，所以我们需要对ttf文件进行打包操作，只引用用到的字体，这里我们称静态文字，后面会介绍动态文字的解决方案。</p>
+<h3 id="font-spider"><a href="#font-spider" class="headerlink" title="font-spider"></a>font-spider</h3><p><code>font-spider</code>是一个npm库，可以解析html用到特殊字体的文字，按需打包，替换原来的ttf文件，并且在ttf文件目录下生成一个<code>.font-spider</code>文件夹存放原来总的ttf文件。使用下面命令可进行打包操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo font-spider --debug src/**/index.html</span><br></pre></td></tr></table></figure>
+<p><code>--debug</code>命令可以查看解析过程。</p>
+<h3 id="结合webpack"><a href="#结合webpack" class="headerlink" title="结合webpack"></a>结合webpack</h3><p>如果你是传统的多页面应用，这样的打包方式是没问题。但是现代前端工程化之后，前端只会有一个<code>index.html</code>入口文件，且css文件是通过js引入的，<code>font-spider</code>无法解析js里的css文件，所以那些引用<code>font-family: &quot;fashion&quot;;</code>字体的文字都会失效。这里提供两个解决方案：</p>
+<p><strong>1.在html里引入绝对路径的css文件，<code>https://www.baidu.com/index.css</code>。</strong></p>
+<p><strong>2.采用相对路径，基于网站根目录。一般情况下webpack工程下都会在项目根目录下建一个<code>static</code>目录存放静态文件。路径如下：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"./static/mgday2018/font/font.css"</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这里有一点需要注意，打包的时候，<code>font-spider</code>是根据index.html检索css所对应的相对目录，比如我，有多个html文件，所以他们所对应的字体文件的位置需要根据html所在的位置。而且你使用字体的方式，不是在使用的地方上加<code>font-family: &quot;fashion&quot;;</code>样式，而是通过class的方式引入（如class=”fashion-font”），这样打包的时候才能被依赖。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"./static/mgday2018/font/font.css"</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 下面的地址是为了兼容font-spider的打包地址 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"../../../static/mgday2018/font/font.css"</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最终实现效果</p>
+<p><img src="../assets/font-spider/font.png" alt=""></p>
+<h3 id="动态文字"><a href="#动态文字" class="headerlink" title="动态文字"></a>动态文字</h3><p>有些人会说你这是静态文字啊，有些文字是通过后端接口返回的，我们无法提前打包啊。这里提供三个解决方案：</p>
+<p><strong>1.利用fontmin.js</strong></p>
+<p>fontmin.js允许你提前将需要的问题，提前打包，即使文字不在html里。但这其实这只是解决文字不在html里，还是没解决后端接口返回的文字的问题。参考链接：<br><a href="https://blog.csdn.net/kkfd1002/article/details/80073079" target="_blank" rel="noopener">移动端引入的字体文件过大处理方法</a>。</p>
+<p><strong>2.实时打包</strong></p>
+<p>原理：搭建一个node中间层，每次接口返回的时候，先调用node服务fontmin，打包接口中用到的文字，然后返回一个静态地址给前端，前端拿到接口数据和一个静态css地址，先加载css地址，再加载文字。但是这回造成很大的资源浪费，且每次生成一个字体文件，可是难以控制的。这里再提供一种思路，node中间层每次获取接口文字，重新编译页面中所有需要用到的字体（这里会有缓存对比，如果文字都已经包含，则不重新打包），再把css地址和数据返回给前端。但无论如何，只能针对几个接口开放实时打包，否则再大的服务器也抗不住这种压力。</p>
+<p><strong>3.引入整个字体文件</strong></p>
+<p>回到老问题，引入整个字体文件。首屏所需要用到的字体文件先单独打包，先加载首屏需要用的字体文件，再通过延迟加载和cdn，加载整个字体文件。这样能比较好的实现动态文字的问题。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>可见很明显，动态的文字其实不适合特殊字体，无论怎么优化，都需要浪费很多资源，性能也是一个问题。所以我们只能期望将来某一天，网速飞快了，几M的文件能瞬间加载了，这个问题就迎刃而解了。</p>
+<hr>
+<p>写作时间：20181118</p>
+
         </div>
       </article>
     </div>
@@ -142,6 +167,10 @@
     </div>
     <!-- Pre or Next -->
     <div class="nav-links">
+      
+        <div class="nav-previous">
+          <a href="/bdshare/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+        </div>
       
       
         <div class="nav-next">
