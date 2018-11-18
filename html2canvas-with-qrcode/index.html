@@ -126,8 +126,8 @@
         <!-- Post Main Content -->
         <div class="entry-content">
           <h3 id="需求导向"><a href="#需求导向" class="headerlink" title="需求导向"></a>需求导向</h3><p>最近做H5活动时，又遇到一个常规的需求，将页面生成一张图片，提示用户长按保存。类似最近看到的微视的一个测试性格的活动。</p>
-<p>效果图如下，点击链接可测试，<a href="https://h5.weishi.qq.com/weishi/authproxy/domain/billboard?ticket=&amp;srctype=61&amp;sid=&amp;g_f=5757&amp;_wv=1&amp;needlogin=1&amp;navstyle=0&amp;wxScope=snsapi_userinfo&amp;from=groupmessage&amp;isappinstalled=0" target="_blank" rel="noopener">测试链接</a></p>
-<p><img src="../assets/html2canvas-with-qrcode/true.png" alt=""></p>
+<p>效果图如下，点击链接可测试，请在微信里打开，<a href="https://h5.weishi.qq.com/weishi/authproxy/domain/billboard?ticket=&amp;srctype=61&amp;sid=&amp;g_f=5757&amp;_wv=1&amp;needlogin=1&amp;navstyle=0&amp;wxScope=snsapi_userinfo&amp;from=groupmessage&amp;isappinstalled=0" target="_blank" rel="noopener">测试链接</a></p>
+<p><img src="../assets/html2canvas-with-qrcode/body.jpeg" alt=""></p>
 <h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><p>我们利用html2canvas这个前端库，先将html页面转换成canvas，再通过这个API的回调，调用生成base64的方法，最终将图片赋值给img标签的src属性。</p>
 <h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p><strong>html2canvas转换成base64</strong></p>
 <p>这里需要注意，html2canvas入参必须要原生JS的DOM对象</p>
