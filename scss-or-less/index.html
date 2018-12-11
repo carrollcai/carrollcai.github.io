@@ -39,7 +39,7 @@
   <link rel="shortcut icon" href="https://blog.caichengnan.com/assets/favicon.ico">
 
   <!-- Custom CSS/Sass -->
-  <link rel="stylesheet" href="https:/blog.caichengnan.com/css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
 
   <!----------------------------
   https://github.com/GallenHu/hexo-theme-Daily
@@ -64,7 +64,7 @@
   <header class="site-header">
   <div class="header-inside">
     <div class="logo">
-      <a href="https:/blog.caichengnan.com/" rel="home">
+      <a href="/" rel="home">
         
       </a>
     </div>
@@ -76,7 +76,7 @@
           
           
             <li>
-              <a href="https:/blog.caichengnan.com/.">
+              <a href="/.">
                 
                   home
                 
@@ -84,7 +84,7 @@
             </li>
           
             <li>
-              <a href="https:/blog.caichengnan.com/archives">
+              <a href="/archives">
                 
                   archive
                 
@@ -126,7 +126,7 @@
         <!-- Post Main Content -->
         <div class="entry-content">
           <p>scss和less都是css预处理器，scss是sass3的别名。这两个预处理我都用过，下面我来分享一下经验：</p>
-<p>如果团队没有特殊需求，能用less就请用less吧。平时我们使用到的css预处理器功能真的不多，嵌套语法、变量、函数封装，这三个需求less都能满足。除非你喜欢sass的语法，或者mixin函数，或者无花括号语法，又或者你和我一样有特殊的需求。sass的基础用法，请查看这篇文章<a href="http://blog.caichengnan.com/sass/" target="_blank" rel="noopener">Sass基础用法</a>。</p>
+<p>如果团队没有特殊需求，能用less就请用less吧。平时我们使用到的css预处理器功能真的不多，嵌套语法、变量、函数封装，这三个需求less都能满足。除非你喜欢sass的语法，或者mixin函数，或者无花括号语法，又或者你和我一样有特殊的需求。sass的基础用法，请查看这篇文章<a href="http://blog.caichengnan.com/sass/">Sass基础用法</a>。</p>
 <h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><p>下面我介绍在vue项目中，怎么使用less，全为都为webpack3的配置，webpack4 loaders的语法有修改，请自行搜索。</p>
 <h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add less less-loader --save</span><br></pre></td></tr></table></figure>
 <p>在webpack.base.config.js中的rules下配置<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  test: <span class="regexp">/\.less$/</span>,</span><br><span class="line">  loaders: [<span class="string">"style"</span>, <span class="string">"css"</span>, <span class="string">"less"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -177,12 +177,12 @@
     <div class="nav-links">
       
         <div class="nav-previous">
-          <a href="https://blog.caichengnan.com/webpack4/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
+          <a href="/webpack4/" rel="prev"><span class="meta-arraw meta-arraw-left"></span> Older Posts</a>
         </div>
       
       
         <div class="nav-next">
-          <a href="https://blog.caichengnan.com/war2/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+          <a href="/war2/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
         </div>
       
     </div>
@@ -245,7 +245,7 @@
 
   <!-- After footer scripts -->
   <!-- scripts -->
-<script src="https:/blog.caichengnan.com/js/app.js"></script>
+<script src="/js/app.js"></script>
 
 
 
