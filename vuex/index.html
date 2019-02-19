@@ -137,6 +137,8 @@
 <h3 id="触发dispatch、commit的时候，action里传入type和payload。那action执行函数中第一个参数dispatch、state等从哪获得的？"><a href="#触发dispatch、commit的时候，action里传入type和payload。那action执行函数中第一个参数dispatch、state等从哪获得的？" class="headerlink" title="触发dispatch、commit的时候，action里传入type和payload。那action执行函数中第一个参数dispatch、state等从哪获得的？"></a>触发dispatch、commit的时候，action里传入type和payload。那action执行函数中第一个参数dispatch、state等从哪获得的？</h3><p>vuex将action和mutation以及getter都封装过了，将state，rootState等相关对象注入。</p>
 <h3 id="如何区分state是外部直接修改了，还是通过mutation方法修改的？"><a href="#如何区分state是外部直接修改了，还是通过mutation方法修改的？" class="headerlink" title="如何区分state是外部直接修改了，还是通过mutation方法修改的？"></a>如何区分state是外部直接修改了，还是通过mutation方法修改的？</h3><p>vuex中有一个开关函数，执行commit的时候，会执行this._withCommit(fn)，设置_commiting标志为true，修改完成之后还原_committing变量。外部修改虽然改变state，但是没有修改_committing标志。只需要watch一下state change即可判断。vuex中开启严格模式，也是通过监听这个标记。</p>
 <p>参考文章：<a href="https://tech.meituan.com/2017/04/27/vuex-code-analysis.html" target="_blank" rel="noopener">https://tech.meituan.com/2017/04/27/vuex-code-analysis.html</a></p>
+<hr>
+<p>写作时间：20190212</p>
 
         </div>
       </article>
