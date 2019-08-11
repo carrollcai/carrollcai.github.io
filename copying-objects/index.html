@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!--Description-->
+  
+
+  <!--Author-->
+  
+  <meta name="author" content="carroll">
+  
+
+  <!--Open Graph Title-->
+  
+      <meta property="og:title" content="在JS里复制对象"/>
+  
+  <!--Open Graph Description-->
+  
+  <!--Open Graph Site Name-->
+  <meta property="og:site_name" content="卡罗的博客"/>
+  <!--Type page-->
+  
+      <meta property="og:type" content="article" />
+  
+  <!--Page Cover-->
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- Title -->
+  
+  <title>在JS里复制对象 - 卡罗的博客</title>
+
+
+  <link rel="shortcut icon" href="https://blog.caichengnan.com/assets/favicon.ico">
+
+  <!-- Custom CSS/Sass -->
+  <link rel="stylesheet" href="/css/style.css">
+
+  <!----------------------------
+  https://github.com/GallenHu/hexo-theme-Daily
+
+ _____            _   _
+|  __ \          (_) | |
+| |  | |   __ _   _  | |  _   _
+| |  | |  / _` | | | | | | | | |
+| |__| | | (_| | | | | | | |_| |
+|_____/   \__,_| |_| |_|  \__, |
+                          __/ |
+                         |___/
+
+    --------------------------->
+
+</head>
+
+
+<body>
+
+  <!-- Nav -->
+  <header class="site-header">
+  <div class="header-inside">
+    <div class="logo">
+      <a href="/" rel="home">
+        
+      </a>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse">
+        <ul class="navbar-nav">
+          
+          
+            <li>
+              <a href="/.">
+                
+                  home
+                
+              </a>
+            </li>
+          
+            <li>
+              <a href="https://blog.caichengnan.com/archives/">
+                
+                  archive
+                
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </nav>
+    <div class="button-wrap">
+      <button class="menu-toggle">Primary Menu</button>
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <div class="content-area">
+  <div class="post">
+    <!-- Post Content -->
+    <div class="container">
+      <article>
+        <!-- Title date & tags -->
+        <div class="post-header">
+          <h1 class="entry-title">
+            在JS里复制对象
+            
+          </h1>
+          <p class="posted-on">
+          2019-08-11
+          </p>
+          <div class="tags-links">
+            
+              
+            
+          </div>
+        </div>
+        <!-- Post Main Content -->
+        <div class="entry-content">
+          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>今年初看到一篇好文章，今天才有时间翻译。</p>
+<p><a href="https://smalldata.tech/blog/2018/11/01/copying-objects-in-javascript" target="_blank" rel="noopener">COPYING OBJECTS IN JAVASCRIPT</a></p>
+<h3 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h3><p>在本文中，我们将着手于通过不同的方式探索在JavaScript中一个对象被拷贝。我们将会在浅拷贝和深拷贝之间做一个对比。</p>
+<p>在开始之前，有一个小地方值得注意：在JS中的对象是一个简单的本地内存的引用。这些引用是可变的，比如，它们可以被重新赋值。因此，简单复制一份引用将导致2个引用对象指向同一个本地内存地址。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = &#123;</span><br><span class="line">    a : <span class="string">"abc"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">console</span>.log(foo.a); <span class="comment">// abc</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> bar = foo;</span><br><span class="line"><span class="built_in">console</span>.log(bar.a); <span class="comment">// abc</span></span><br><span class="line"></span><br><span class="line">foo.a = <span class="string">"yo foo"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(foo.a); <span class="comment">// yo foo</span></span><br><span class="line"><span class="built_in">console</span>.log(bar.a); <span class="comment">// yo foo</span></span><br><span class="line"></span><br><span class="line">bar.a = <span class="string">"whatup bar?"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(foo.a); <span class="comment">// whatup bar?</span></span><br><span class="line"><span class="built_in">console</span>.log(bar.a); <span class="comment">// whatup bar?</span></span><br></pre></td></tr></table></figure>
+<p>正如上面的例子，foo和bar都反应出改变会影响另一个对象。因此，在JS中做一个拷贝有时需要依赖于你的场景。</p>
+<h4 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h4><p>如果你的对象只有值类型的属性，你可以使用解构赋值（spread）的语法或者<code>Object.assign(...)</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">foo</span>: <span class="string">"foo"</span>, <span class="attr">bar</span>: <span class="string">"bar"</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> copy = &#123; ...obj &#125;; <span class="comment">// Object &#123; foo: "foo", bar: "bar" &#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">foo</span>: <span class="string">"foo"</span>, <span class="attr">bar</span>: <span class="string">"bar"</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> copy = <span class="built_in">Object</span>.assign(&#123;&#125;, obj); <span class="comment">// Object &#123; foo: "foo", bar: "bar" &#125;</span></span><br></pre></td></tr></table></figure>
+<p>上面的两种方法可以被用于复制多种原对象或者目标对象的属性值：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj1 = &#123; <span class="attr">foo</span>: <span class="string">"foo"</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> obj2 = &#123; <span class="attr">bar</span>: <span class="string">"bar"</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> copySpread = &#123; ...obj1, ...obj2 &#125;; <span class="comment">// Object &#123; foo: "foo", bar: "bar" &#125;</span></span><br><span class="line"><span class="keyword">var</span> copyAssign = <span class="built_in">Object</span>.assign(&#123;&#125;, obj1, obj2); <span class="comment">// Object &#123; foo: "foo", bar: "bar" &#125;</span></span><br></pre></td></tr></table></figure>
+<p>上面的方法的问题展示了用对象的作为对象的属性，仅仅是将引用拷贝过去，这等价于<code>var bar = foo;</code>，在第一个代码例子中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = &#123; <span class="attr">a</span>: <span class="number">0</span> , <span class="attr">b</span>: &#123; <span class="attr">c</span>: <span class="number">0</span> &#125; &#125;;</span><br><span class="line"><span class="keyword">var</span> copy = &#123; ...foo &#125;;</span><br><span class="line"></span><br><span class="line">copy.a = <span class="number">1</span>;</span><br><span class="line">copy.b.c = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.dir(foo); <span class="comment">// &#123; a: 0, b: &#123; c: 2 &#125; &#125;</span></span><br><span class="line"><span class="built_in">console</span>.dir(copy); <span class="comment">// &#123; a: 1, b: &#123; c: 2 &#125; &#125;</span></span><br></pre></td></tr></table></figure>
+<h4 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h4><p>为了深拷贝一个对象，一个可能的解决方案是将对象序列化成一个字符串，再反序列化回一个对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">a</span>: <span class="number">0</span>, <span class="attr">b</span>: &#123; <span class="attr">c</span>: <span class="number">0</span> &#125; &#125;;</span><br><span class="line"><span class="keyword">var</span> copy = <span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(obj));</span><br></pre></td></tr></table></figure>
+<p>很不幸地，这个方法仅仅当对象包含可序列化地值类型和没有循环引用类型时起作用。用<code>Date</code>对象就是一个不可序列化地值类型，尽管它在ISO的标准可以被打印成字符串，<code>JSON.parse</code>仅仅把它解释成一个字符串（string），而不是<code>Date</code>对象。</p>
+<h4 id="深拷贝的一些警告"><a href="#深拷贝的一些警告" class="headerlink" title="深拷贝的一些警告"></a>深拷贝的一些警告</h4><p>更复杂的例子，你可以使用HTML5的一个新克隆算法，<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm" target="_blank" rel="noopener">结构化克隆(structured clone)</a>。很遗憾，在细这篇文章的时候，它仍然被限制于确定的类型，但是它比<code>JSON.parse</code>支持更多的类型：<code>Date, RegExp, Map, Set, Blob, FileList, ImageData, sparse and typed Array</code>。它也在被克隆的数据中保留了引用，支持上面提及的不起作用的序列化方法，循环和递归的结构。</p>
+<p>目前，没有直接的方式可用于可结构化的克隆算法，但有一些新的浏览器特性可以使用这些算法。所以，有一些变通方法可以使用深拷贝对象。</p>
+<p><code>Via MessageChannels</code>:它利用一个通信功能中的序列化算法。这个功能基于事件（event ），克隆结果是一个异步的操作。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StructuredCloner</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">this</span>.pendingClones_ = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">    <span class="keyword">this</span>.nextKey_ = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> channel = <span class="keyword">new</span> MessageChannel();</span><br><span class="line">    <span class="keyword">this</span>.inPort_ = channel.port1;</span><br><span class="line">    <span class="keyword">this</span>.outPort_ = channel.port2;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.outPort_.onmessage = <span class="function">(<span class="params">&#123;data: &#123;key, value&#125;&#125;</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> resolve = <span class="keyword">this</span>.pendingClones_.get(key);</span><br><span class="line">      resolve(value);</span><br><span class="line">      <span class="keyword">this</span>.pendingClones_.delete(key);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">this</span>.outPort_.start();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  cloneAsync(value) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> key = <span class="keyword">this</span>.nextKey_++;</span><br><span class="line">      <span class="keyword">this</span>.pendingClones_.set(key, resolve);</span><br><span class="line">      <span class="keyword">this</span>.inPort_.postMessage(&#123;key, value&#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> structuredCloneAsync = <span class="built_in">window</span>.structuredCloneAsync =</span><br><span class="line">    StructuredCloner.prototype.cloneAsync.bind(<span class="keyword">new</span> StructuredCloner);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> main = <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> original = &#123; <span class="attr">date</span>: <span class="keyword">new</span> <span class="built_in">Date</span>(), <span class="attr">number</span>: <span class="built_in">Math</span>.random() &#125;;</span><br><span class="line">  original.self = original;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> clone = <span class="keyword">await</span> structuredCloneAsync(original);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// different objects:</span></span><br><span class="line">  <span class="built_in">console</span>.assert(original !== clone);</span><br><span class="line">  <span class="built_in">console</span>.assert(original.date !== clone.date);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// cyclical:</span></span><br><span class="line">  <span class="built_in">console</span>.assert(original.self === original);</span><br><span class="line">  <span class="built_in">console</span>.assert(clone.self === clone);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// equivalent values:</span></span><br><span class="line">  <span class="built_in">console</span>.assert(original.number === clone.number);</span><br><span class="line">  <span class="built_in">console</span>.assert(<span class="built_in">Number</span>(original.date) === <span class="built_in">Number</span>(clone.date));</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"Assertions complete."</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">main();</span><br></pre></td></tr></table></figure>
+<p><code>Via the history API</code>:<code>history.pushState()</code>和<code>history.replacState()</code>两个API，对它们的第一个参数（argument）创建了结构化克隆！注意在这里，这个方法是同步的，操作浏览器历史不是一个快的方式，一直调用这个方法会导致浏览器无法响应。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> structuredClone = <span class="function"><span class="params">obj</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> oldState = history.state;</span><br><span class="line">  history.replaceState(obj, <span class="literal">null</span>);</span><br><span class="line">  <span class="keyword">const</span> clonedObj = history.state;</span><br><span class="line">  history.replaceState(oldState, <span class="literal">null</span>);</span><br><span class="line">  <span class="keyword">return</span> clonedObj;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>Via this notification API</code>: 当创建一个新的通知（Notification），这个构造函数就会对关联的数据创建一个结构化克隆。通知将会展示一个浏览器的通知给用户，但是这个可能会没有征兆的失败，除非应用（浏览器）允许展示通知消息。在授予权限（通知打开）的情况下，通知会立即关闭。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> structuredClone = <span class="function"><span class="params">obj</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> n = <span class="keyword">new</span> Notification(<span class="string">""</span>, &#123;<span class="attr">data</span>: obj, <span class="attr">silent</span>: <span class="literal">true</span>&#125;);</span><br><span class="line">  n.onshow = n.close.bind(n);</span><br><span class="line">  <span class="keyword">return</span> n.data;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="深拷贝在NodeJs中"><a href="#深拷贝在NodeJs中" class="headerlink" title="深拷贝在NodeJs中"></a>深拷贝在NodeJs中</h4><p>在8.0.0的版本中，NodeJs提供了一个序列化的api，适配结构化克隆。在写这篇文章时，这个API还被标记为试验性的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> v8 = <span class="built_in">require</span>(<span class="string">'v8'</span>);</span><br><span class="line"><span class="keyword">const</span> buf = v8.serialize(&#123;<span class="attr">a</span>: <span class="string">'foo'</span>, <span class="attr">b</span>: <span class="keyword">new</span> <span class="built_in">Date</span>()&#125;);</span><br><span class="line"><span class="keyword">const</span> cloned = v8.deserialize(buf);</span><br><span class="line">cloned.b.getMonth();</span><br></pre></td></tr></table></figure>
+<p>8.0.0之前的版本和更稳定的实现方式，可以使用<code>lodash</code>的<code>cloneDeep</code>，它也是基于结构化克隆的算法。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>在JS中最好的复制对象的算法，高度依赖于上下文和对象的类型，当你想要拷贝的时候。<code>lodash</code>是一个最安全的通用的深拷贝的方法，你可以有更有效的实现方式，如果你想要自定义，下面是对dates也起作用的深拷贝例子。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepClone</span>(<span class="params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> copy;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Handle the 3 simple types, and null or undefined</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">null</span> == obj || <span class="string">"object"</span> != <span class="keyword">typeof</span> obj) <span class="keyword">return</span> obj;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Handle Date</span></span><br><span class="line">  <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> <span class="built_in">Date</span>) &#123;</span><br><span class="line">    copy = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    copy.setTime(obj.getTime());</span><br><span class="line">    <span class="keyword">return</span> copy;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Handle Array</span></span><br><span class="line">  <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> <span class="built_in">Array</span>) &#123;</span><br><span class="line">    copy = [];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = obj.length; i &lt; len; i++) &#123;</span><br><span class="line">        copy[i] = deepClone(obj[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> copy;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Handle Function</span></span><br><span class="line">  <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> <span class="built_in">Function</span>) &#123;</span><br><span class="line">    copy = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> obj.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> copy;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Handle Object</span></span><br><span class="line">  <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> <span class="built_in">Object</span>) &#123;</span><br><span class="line">      copy = &#123;&#125;;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> attr <span class="keyword">in</span> obj) &#123;</span><br><span class="line">          <span class="keyword">if</span> (obj.hasOwnProperty(attr)) copy[attr] = deepClone(obj[attr]);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> copy;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"Unable to copy obj as type isn't supported "</span> + obj.constructor.name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就我而言，我期待在任何地方都能用结构化的克隆，而不用管浅拷贝深拷贝的问题，只有开开心心的复制。只想放养，每次放一只。</p>
+<h3 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h3><p>js的对象是引用类型，因此会引发很多问题。如果react中，PureComponent只有一层浅比较，如果传入的props是对象类型，它就会失效。比如vue中，只改变数组的下标，并不会触发双向数据绑定中的set监听。所以，理解深拷贝与浅拷贝是一项基本技能。</p>
+<hr>
+<p>写作时间：20190811</p>
+
+        </div>
+      </article>
+    </div>
+    <!-- Comments -->
+    <div class="container">
+      
+<section id="comment">
+  <!-- <h1 class="title">Comments</h1> -->
+
+  
+</section>
+
+
+    </div>
+    <!-- Pre or Next -->
+    <div class="nav-links">
+      
+      
+        <div class="nav-next">
+          <a href="/call/" rel="prev">Newer Posts <span class="meta-arraw meta-arraw-right"></span></a>
+        </div>
+      
+    </div>
+
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <!-- Footer-widgets -->
+<div class="footer-widgets">
+  <div class="row inside-wrapper">
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">关于本人</h1>
+        <div class="custom-widget-content">
+          
+          <ul><li><a href="https://zhuanlan.zhihu.com/c_215040065">知乎专栏</a></li><li><a href="https://github.com/carrollcai">github</a></li></ul>
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Contact</h1>
+        <div class="widget-text">
+          
+            
+              <a href="https://github.com/carrollcai" class="icon icon-github" target="_blank">github</a>
+            
+          
+        </div>
+      </aside>
+    </div>
+    <div class="col-1-3">
+      <aside>
+        <h1 class="widget-title">Search</h1>
+        <div class="widget-text">
+          <form onSubmit="return appDaily.submitSearch('')">
+            <p>
+              <input type="text" placeholder="search..." id="homeSearchInput">
+            </p>
+            <!-- <input type="submit" value="GO"> -->
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+<!-- Footer -->
+<footer class="site-info">
+  <p>
+    <span>卡罗的博客 &copy; 2019</span>
+    
+      <span class="split">|</span>
+      <span>Powered by Carroll</span>
+    
+  </p>
+</footer>
+
+
+  <!-- After footer scripts -->
+  <!-- scripts -->
+<script src="/js/app.js"></script>
+
+
+
+
+
+</body>
+
+</html>
